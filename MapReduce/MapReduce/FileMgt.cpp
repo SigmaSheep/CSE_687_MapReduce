@@ -12,8 +12,7 @@ FileMgt::FileMgt(std::string inPath_p, std::string mediaPath_p, std::string outP
 
 void FileMgt::MapDist()
 {
-	std::vector<std::string> FileList;
-	FileList = FileIter(inPath);
+	std::vector<std::string> FileList = FileIter(inPath);
 
 	int FileCount = 0;
 	std::string mediaFileName;
@@ -51,25 +50,51 @@ void FileMgt::MapDist()
 	}
 }
 
-using namespace boost::filesystem;
-struct recursive_directory_range
-{
-	typedef recursive_directory_iterator iterator;
-	recursive_directory_range(path p) : p_(p) {}
-
-	iterator begin() { return recursive_directory_iterator(p_); }
-	iterator end() { return recursive_directory_iterator(); }
-
-	path p_;
-};
 
 std::vector<std::string> FileMgt::FileIter(std::string Path_p)
 {
 	std::vector<std::string> FileList;
 
-	for (auto it : recursive_directory_range(inPath))
+	namespace fs = boost::filesystem;
+
+	typedef boost::filesystem::recursive_directory_iterator iterator;
+	fs::path p(Path_p);
+	fs::recursive_directory_iterator end = fs::recursive_directory_iterator();
+	fs::recursive_directory_iterator begin = fs::recursive_directory_iterator(p);
+
+	for (fs::recursive_directory_iterator it = begin;begin!=end;it++)
 	{
-		FileList.push_back(it.path().string());
+		FileList.push_back(it->path().string());
 	}
+
 	return FileList;
+}
+
+std::vector<std::string> FileMgt::ReadList(std::vector<std::string> FileList)
+{	
+	std::vector<std::string> Result;
+
+	for (std::vector<std::string>::iterator it = FileList.begin(); it != FileList.end(); ++it)
+	{
+		// read and send to Map
+		std::ifstream infile(*it);
+		std::string line;
+
+		if (infile.is_open())
+		{
+			while (std::getline(infile, line))
+			{
+				Result.push_back(line);
+			}
+		}
+		else
+		{
+			std::cout << "file is not open" << std::endl;
+		}
+
+		infile.close();
+
+	}
+
+	return Result;
 }
