@@ -1,18 +1,13 @@
 #include "stdafx.h"
 #include "FileMgt.h"
 #include <sstream>
+#include <fstream>
 
 
-FileMgt::FileMgt(std::string inPath_p, std::string mediaPath_p, std::string outPath_p)
+
+void FileMgt::MapDist(std::vector<std::string> inputFileList, std::string mediaPath_p, int MapBufSize)
 {
-	inPath = inPath_p;
-	mediaPath = mediaPath_p;
-	outPath = outPath_p;
-}
-
-void FileMgt::MapDist()
-{
-	std::vector<std::string> FileList = FileIter(inPath);
+	std::vector<std::string> FileList = inputFileList;
 
 	int FileCount = 0;
 	std::string mediaFileName;
@@ -21,7 +16,7 @@ void FileMgt::MapDist()
 	for (std::vector<std::string>::iterator it = FileList.begin(); it != FileList.end(); ++it)
 	{
 
-		sstm << mediaPath << "\\" << FileCount << ".txt";
+		sstm << mediaPath_p << "\\" << FileCount << ".txt";
 		mediaFileName = sstm.str();
 		sstm.str(std::string());
 		
@@ -97,4 +92,37 @@ std::vector<std::string> FileMgt::ReadList(std::vector<std::string> FileList)
 	}
 
 	return Result;
+}
+
+void FileMgt::printvector(std::vector<std::string> inputVector)
+{
+	for (std::vector<std::string>::iterator it = inputVector.begin(); it != inputVector.end(); ++it)
+	{
+		std::cout << *it << std::endl;
+
+	}
+
+}
+
+
+//write vectors to txt file
+void FileMgt::writeTxt(std::vector<std::string> inputVector, std::string FileName)
+{
+	std::ofstream outfile(FileName, std::ios::app);
+
+	if (outfile.is_open()) {
+		for (std::vector<std::string>::iterator it = inputVector.begin(); it != inputVector.end(); ++it)
+		{
+			outfile << *it << std::endl;
+			std::cout << *it << std::endl;
+		}
+
+	}
+	else
+	{
+		std::cout << "file_error" << std::endl;
+	}
+
+	outfile.close();
+
 }

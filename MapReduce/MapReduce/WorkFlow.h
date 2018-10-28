@@ -5,7 +5,8 @@
 #include <string>
 #include "FileMgt.h"
 #include "Map.h"
-
+#include "SortClass.h"
+#include "Reduce.h"
 class WorkFlow
 {
 public:
