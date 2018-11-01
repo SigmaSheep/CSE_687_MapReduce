@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SortClass.h"
-#include <algorithm>
-#include <iostream>
+
 
 SortClass::SortClass()
 {
@@ -28,7 +27,6 @@ std::vector<std::string> SortClass::sortfunction(std::vector<std::string> inputS
 
 		if (word == *it)
 		{
-
 			result_word.append(" 1");
 			//std::cout << result_word << std::endl;
 		}

@@ -26,11 +26,9 @@ WorkFlow::WorkFlow(std::string inPath_p, std::string mediaPath_p, std::string ou
 	Reduce Reduce_ins;
 	std::vector<std::string> final_result = Reduce_ins.reduceFunction(sortedTokens);
 	
-	Works.printvector(final_result);
-
-
+	//Works.printvector(final_result);
 	std::string final_result_name = outPath_p.append("\\final_result.txt");
+	std::ofstream file(final_result_name, std::ios::out);
 	Works.writeTxt(final_result, final_result_name);
 	
-
 }

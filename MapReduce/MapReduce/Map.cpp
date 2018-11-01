@@ -27,14 +27,16 @@
 		{
 			const char *begin = str;
 
-			while (!std::ispunct(*str) && *str != ' ' && *str)
+			while (!std::ispunct(*str) && *str != ' ' && *str !='\t' && *str)
 			{
 				str++;
 			}
 
-			result.push_back(std::string(begin, str));
+			if (begin != str) {
+				result.push_back(std::string(begin, str));
+			}
 
-			while ((std::ispunct(*str) || *str == ' ') && *str)
+			while ((std::ispunct(*str) || *str == ' ' || *str =='\t') && *str)
 			{
 				str++;
 			}

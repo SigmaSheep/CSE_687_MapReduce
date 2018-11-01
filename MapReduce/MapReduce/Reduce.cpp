@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "Reduce.h"
-#include <string>
-#include <iostream>
-#include <algorithm>
-#include <boost/range/algorithm/count.hpp>
+
 
 Reduce::Reduce()
 {
@@ -32,7 +29,6 @@ std::vector<std::string> Reduce::reduceFunction(std::vector<std::string> sortedT
 		count_reuslt.append(" ");
 		count_reuslt.append(std::to_string(count));
 
-		//std::cout << count_reuslt<<std::endl;
 
 		count = 0;
 		reduce_result.push_back(count_reuslt);

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "FileMgt.h"
-#include <sstream>
-#include <fstream>
+
 
 
 
@@ -9,17 +8,13 @@ void FileMgt::MapDist(std::vector<std::string> inputFileList, std::string mediaP
 {
 	std::vector<std::string> FileList = inputFileList;
 
-	int FileCount = 0;
-	std::string mediaFileName;
-	std::stringstream sstm;
+	std::string mediaFileName = mediaPath_p.append("\\intermediate.txt");
 
+	std::ofstream file(mediaFileName, std::ios::out);
+ 
 	for (std::vector<std::string>::iterator it = FileList.begin(); it != FileList.end(); ++it)
 	{
 
-		sstm << mediaPath_p << "\\" << FileCount << ".txt";
-		mediaFileName = sstm.str();
-		sstm.str(std::string());
-		
 		// read and send to Map
 		std::ifstream infile(*it);
 		std::string line;
@@ -31,6 +26,7 @@ void FileMgt::MapDist(std::vector<std::string> inputFileList, std::string mediaP
 		{
 			while (std::getline(infile, line))
 			{
+				std::transform(line.begin(), line.end(), line.begin(), ::tolower); //transfoer to lowercase
 				mapStream.MapperFunc(mediaFileName, line.c_str());
 			}
 		}
@@ -41,7 +37,6 @@ void FileMgt::MapDist(std::vector<std::string> inputFileList, std::string mediaP
 
 		infile.close();
 
-		FileCount++;
 	}
 }
 
@@ -114,9 +109,8 @@ void FileMgt::writeTxt(std::vector<std::string> inputVector, std::string FileNam
 		for (std::vector<std::string>::iterator it = inputVector.begin(); it != inputVector.end(); ++it)
 		{
 			outfile << *it << std::endl;
-			std::cout << *it << std::endl;
+			//std::cout << *it << std::endl;
 		}
-
 	}
 	else
 	{

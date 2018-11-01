@@ -5,7 +5,6 @@
 //  ver 1.0                                                        //
 //  Language:      Visual C++ 2017                                 //
 //  Application:   Prototype for CSE687 Pr1, Fa18                  //
-//  Author:        Xin Liu, Syracuse University					   //
 /////////////////////////////////////////////////////////////////////
 /*
 Module Operations:
