@@ -1,0 +1,9 @@
+﻿  stdafx.cpp
+  FileMgt.cpp
+  Map.cpp
+  Execute.cpp
+  Reduce.cpp
+  SortClass.cpp
+  WorkFlow.cpp
+  Generating Code...
+  MapReduce.vcxproj -> C:\Users\tat3f\source\repos\CSE_687_MapReduce-MapReduce_10_28\MapReduce\x64\Debug\MapReduce.exe
