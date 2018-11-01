@@ -16,9 +16,8 @@ Destructor will clear the buffer and write to file.
 
 Public Interface:            
 =================
-MapperFunc(std::string mediaFileName, const char *str);
+MapperFunc(std::string mediaFileName, std::string line);
 It takes mediaFileName as a compelete directory with file name.
-*str is the c-type string input. 
 
 Required files
 ================
@@ -31,12 +30,13 @@ Maintenance History:
 */
 //
 
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <vector>
-#include <cctype>
-#include <sstream>
+#include <iostream>  // std::cout (debug)
+#include <string>  // std::string
+#include <fstream> // std::ifstream, std::ofstream
+#include <vector> // std::vector
+#include <cctype> // std::ispunct()
+#include <sstream> // std::stringstream
+#include <algorithm> // std::transform()
 
 class Map
 {
@@ -44,7 +44,7 @@ class Map
 		//hard code bufsize
 		Map() { BufSize = 1000; };
 		~Map();
-		void MapperFunc(std::string mediaFileName, const char *str);
+		void MapperFunc(std::string mediaFileName, std::string line, int BufSize_p);
 
 	private:
 		std::vector<std::string> tokenizer(const char *str);

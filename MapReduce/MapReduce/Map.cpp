@@ -2,17 +2,23 @@
 #include "Map.h"
 
 
-	void Map::MapperFunc(std::string mediaFileName, const char *str)
+	void Map::MapperFunc(std::string mediaFileName, std::string line, int BufSize_p)
 	{
 
-	FileName = mediaFileName;
-	BufCount = 0;
+		BufSize = BufSize_p;
 
-	//assign token
-	std::vector<std::string>token = tokenizer(str);
+		FileName = mediaFileName;
+		BufCount = 0;
+	
+		std::transform(line.begin(), line.end(), line.begin(), ::tolower); //transfoer to lowercase
 
-	//export token
-	exportToken(token);
+		const char *str = line.c_str();
+
+		//assign token
+		std::vector<std::string>token = tokenizer(str);
+
+		//export token
+		exportToken(token);
 
 	}
 

@@ -26,8 +26,7 @@ void FileMgt::MapDist(std::vector<std::string> inputFileList, std::string mediaP
 		{
 			while (std::getline(infile, line))
 			{
-				std::transform(line.begin(), line.end(), line.begin(), ::tolower); //transfoer to lowercase
-				mapStream.MapperFunc(mediaFileName, line.c_str());
+				mapStream.MapperFunc(mediaFileName, line, MapBufSize);
 			}
 		}
 		else
