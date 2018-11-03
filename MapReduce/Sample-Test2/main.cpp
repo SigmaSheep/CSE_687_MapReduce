@@ -8,13 +8,13 @@
 #include "../MapReduce/SortClass.h"
 #include "../MapReduce/SortClass.cpp"
 
-class testallclass : public ::testing::Test
+class testallclass : public ::testing::Test 
 {
 public:
 	testallclass() {}
 	~testallclass() {}
 
-	void SetUp()
+	void SetUp() 
 	{
 		std::string sample = "A, B.\n C, A.";
 		std::string inputPath = ".\\input";
@@ -28,7 +28,7 @@ public:
 		std::string outPath = ".\\out";
 
 	};
-
+		
 	void TearDown()
 	{
 
@@ -65,7 +65,7 @@ TEST_F(testallclass, testMapperFunc)
 TEST_F(testallclass, testSortFunction)
 {
 	SortClass test;
-
+	
 
 }
 
