@@ -4,13 +4,14 @@
 #include "gtest/gtest.h"
 #include "../MapReduce/Map.h"
 #include "../MapReduce/Map.cpp"
-//#include "../MapReduce/FileMgt.h"
-//#include "../MapReduce/FileMgt.cpp"
+#include "../MapReduce/FileMgt.h"
+#include "../MapReduce/FileMgt.cpp"
 #include "../MapReduce/SortClass.h"
 #include "../MapReduce/SortClass.cpp"
 #include "../MapReduce/Reduce.h"
 #include "../MapReduce/Reduce.cpp"
-//#include "../MapReduce/WorkFlow.h"
+#include "../MapReduce/WorkFlow.h"
+#include "../MapReduce/WorkFlow.cpp"
 
 class testallclass : public ::testing::Test
 {
@@ -29,22 +30,25 @@ public:
 	{
 	};
 
-	std::string inputfileName = ".\\ifls.txt";
-	std::string sample = "A B,C A.";
-	std::string medianFile = ".\\intermediate.txt";
+	std::string inputPath = ".\\input";
+	std::string medianPath = ".\\median";
+	std::string outputName = ".\\output\\result.txt";
+	std::string inputfileName = ".\\input\\ifls.txt";
+	std::string sample = "A B, C A.\n A.";
+	std::string medianFile = ".\\median\\intermediate.txt";
 
 
 };
 
 TEST_F(testallclass, LetMapWrite)
 {
-	Map test;
+	Map mapClass;
 	std::ofstream file(medianFile, std::ios::out);
-	test.MapperFunc(medianFile, sample, 10);
+	mapClass.MapperFunc(medianFile, sample, 10);
 
 }
 
-TEST_F(testallclass, testMapResult)
+TEST_F(testallclass, testMap_MapperFunc)
 {
 	std::ifstream read_file(medianFile);
 	std::string line;
@@ -61,47 +65,118 @@ TEST_F(testallclass, testMapResult)
 	read_file.close();
 }
 
-
-TEST_F(testallclass, testSortFunction)
+TEST_F(testallclass, testFileMgt_FileIter)
 {
-	std::string tmp = "a 1";
-	std::vector<std::string> vectmp;
-	vectmp.push_back(tmp);
-	tmp = "b 1";
-	vectmp.push_back(tmp);
-	tmp = "c 1";
-	vectmp.push_back(tmp);
-	tmp = "a 1";
-	vectmp.push_back(tmp);
+	std::vector<std::string> fileList;
+	FileMgt filemgtClass;
+	fileList = filemgtClass.FileIter(inputPath);
+	int len = fileList[0].length();
+
+	EXPECT_EQ("ifls.txt", fileList[0].substr(len - 8, len));
+}
+
+TEST_F(testallclass, testFileMgt_MapDist)
+{
+	std::vector<std::string> fileList;
+	FileMgt filemgtClass;
+	fileList = filemgtClass.FileIter(inputPath);
+
+	filemgtClass.MapDist(fileList, medianPath, 10);
+
+	std::ifstream read_file(medianFile);
+	std::string line;
+	if (read_file.is_open()) {
+		std::getline(read_file, line);
+		EXPECT_EQ("a 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("b 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("c 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("a 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("a 1", line);
+	}
+	read_file.close();
+}
+
+
+
+TEST_F(testallclass, testFileMgt_ReadList)
+{
+	std::vector<std::string> fileList, sortableTokens;
+	FileMgt test;
+	fileList = test.FileIter(medianPath);
+	sortableTokens = test.ReadList(fileList);
+
+	EXPECT_EQ("a 1", sortableTokens[0]);
+	EXPECT_EQ("b 1", sortableTokens[1]);
+	EXPECT_EQ("c 1", sortableTokens[2]);
+	EXPECT_EQ("a 1", sortableTokens[3]);
+	EXPECT_EQ("a 1", sortableTokens[4]);
+}
+
+
+TEST_F(testallclass, testSortClass_sortFunction)
+{
+	std::vector<std::string> fileList, sortableTokens, sortedTokens;
+	FileMgt fclass;
+	fileList = fclass.FileIter(medianPath);
+	sortableTokens = fclass.ReadList(fileList);
 
 	SortClass test;
-	vectmp = test.sortfunction(vectmp);
+	sortedTokens = test.sortfunction(sortableTokens);
 
-	EXPECT_EQ("a 1 1", vectmp[1]);
-	EXPECT_EQ("b 1", vectmp[2]);
-	EXPECT_EQ("c 1", vectmp[3]);
+	EXPECT_EQ("a 1 1 1", sortedTokens[1]);
+	EXPECT_EQ("b 1", sortedTokens[2]);
+	EXPECT_EQ("c 1", sortedTokens[3]);
 }
 
-TEST_F(testallclass, testReduceFunction)
+
+TEST_F(testallclass, testReduce_reduceFunction)
 {
-	std::string tmp = "";
-	std::vector<std::string> vectmp;
-	vectmp.push_back(tmp);
-	tmp = "b 1 1 1";
-	vectmp.push_back(tmp);
-	tmp = "c 1 1 1 1";
-	vectmp.push_back(tmp);
-	tmp = "d 1 1 1 1 1";
-	vectmp.push_back(tmp);
+	std::vector<std::string> fileList, sortableTokens, sortedTokens, result;
+	FileMgt fclass;
+	fileList = fclass.FileIter(medianPath);
+	sortableTokens = fclass.ReadList(fileList);
+	SortClass sortClass;
+	sortedTokens = sortClass.sortfunction(sortableTokens);
 
 	Reduce	test;
-	vectmp = test.reduceFunction(vectmp);
-	EXPECT_EQ("b 3", vectmp[0]);
-	EXPECT_EQ("c 4", vectmp[1]);
-	EXPECT_EQ("d 5", vectmp[2]);
+	result = test.reduceFunction(sortedTokens);
+	EXPECT_EQ("a 3", result[0]);
+	EXPECT_EQ("b 1", result[1]);
+	EXPECT_EQ("c 1", result[2]);
 
 }
 
+TEST_F(testallclass, let_FIleMgt_writetxt_write)
+{
+	std::vector<std::string> fileList, sortableTokens, sortedTokens, result;
+	FileMgt fclass;
+	fileList = fclass.FileIter(medianPath);
+	sortableTokens = fclass.ReadList(fileList);
+	SortClass sortClass;
+	sortedTokens = sortClass.sortfunction(sortableTokens);
+	Reduce	reduceClass;
+	result = reduceClass.reduceFunction(sortedTokens);
+
+	std::ofstream file(outputName, std::ios::out);
+	fclass.writeTxt(result,outputName);
+	
+	std::ifstream read_file(outputName);
+	std::string line;
+	if (read_file.is_open()) {
+		std::getline(read_file, line);
+		EXPECT_EQ("a 3", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("b 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("c 1", line);
+		std::getline(read_file, line);
+	}
+	read_file.close();
+}
 
 int main(int argc, char* argv[])
 {

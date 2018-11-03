@@ -38,7 +38,7 @@
 				str++;
 			}
 
-			if (begin != str) {
+			if (begin != str && !std::string(begin, str).empty()) {
 				result.push_back(std::string(begin, str));
 			}
 
