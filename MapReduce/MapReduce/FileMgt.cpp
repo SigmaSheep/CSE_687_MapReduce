@@ -108,7 +108,6 @@ void FileMgt::writeTxt(std::vector<std::string> inputVector, std::string FileNam
 		for (std::vector<std::string>::iterator it = inputVector.begin(); it != inputVector.end(); ++it)
 		{
 			outfile << *it << std::endl;
-			//std::cout << *it << std::endl;
 		}
 	}
 	else

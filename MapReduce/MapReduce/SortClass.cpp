@@ -28,11 +28,9 @@ std::vector<std::string> SortClass::sortfunction(std::vector<std::string> inputS
 		if (word == *it)
 		{
 			result_word.append(" 1");
-			//std::cout << result_word << std::endl;
 		}
 		else
 		{
-			//std::cout << *it;
 			result.push_back(result_word);
 			result_word.clear();
 			std::string tmp = *it;
@@ -41,8 +39,6 @@ std::vector<std::string> SortClass::sortfunction(std::vector<std::string> inputS
 			result_word.append(" 1");
 		}
 
-		//std::cout << result_word << std::endl;
-		//std::cout << *it << std::endl;
 		word = *it;
 	}
 

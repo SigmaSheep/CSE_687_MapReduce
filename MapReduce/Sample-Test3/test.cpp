@@ -1,6 +1,5 @@
 #include "pch.h"
 
-
 #include "gtest/gtest.h"
 #include "../MapReduce/Map.h"
 #include "../MapReduce/Map.cpp"
@@ -26,30 +25,26 @@ public:
 		writeinput.close();
 	};
 
-	void TearDown()
-	{
+	void TearDown()	{
+		
 	};
 
+	std::string sample = "A B, C A.\nA.";
 	std::string inputPath = ".\\input";
 	std::string medianPath = ".\\median";
-	std::string outputName = ".\\output\\result.txt";
+	std::string outputPath = ".\\output";
 	std::string inputfileName = ".\\input\\ifls.txt";
-	std::string sample = "A B, C A.\n A.";
 	std::string medianFile = ".\\median\\intermediate.txt";
-
-
+	std::string outputName = ".\\output\\finalresult.txt";
 };
 
-TEST_F(testallclass, LetMapWrite)
+TEST_F(testallclass, testMap_MapperFunc)
 {
 	Map mapClass;
 	std::ofstream file(medianFile, std::ios::out);
 	mapClass.MapperFunc(medianFile, sample, 10);
+	mapClass.~Map();
 
-}
-
-TEST_F(testallclass, testMap_MapperFunc)
-{
 	std::ifstream read_file(medianFile);
 	std::string line;
 	if (read_file.is_open()) {
@@ -63,7 +58,9 @@ TEST_F(testallclass, testMap_MapperFunc)
 		EXPECT_EQ("a 1", line);
 	}
 	read_file.close();
+
 }
+
 
 TEST_F(testallclass, testFileMgt_FileIter)
 {
@@ -99,7 +96,6 @@ TEST_F(testallclass, testFileMgt_MapDist)
 	}
 	read_file.close();
 }
-
 
 
 TEST_F(testallclass, testFileMgt_ReadList)
@@ -177,6 +173,26 @@ TEST_F(testallclass, let_FIleMgt_writetxt_write)
 	}
 	read_file.close();
 }
+
+
+TEST_F(testallclass, testWorkFlow)
+{
+	WorkFlow workflowClass(inputPath, medianPath, outputPath);
+	
+	std::ifstream read_file(outputName);
+	std::string line;
+	if (read_file.is_open()) {
+		std::getline(read_file, line);
+		EXPECT_EQ("a 3", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("b 1", line);
+		std::getline(read_file, line);
+		EXPECT_EQ("c 1", line);
+		std::getline(read_file, line);
+	}
+	read_file.close();
+}
+
 
 int main(int argc, char* argv[])
 {
