@@ -4,7 +4,8 @@
 //  Map.h -	   Map function for input txt file					   //
 //  ver 1.0                                                        //
 //  Language:      Visual C++ 2017                                 //
-//  Application:   Prototype for CSE687 Pr1, Fa18                  //
+//  Application:   Prototype for CSE687 Pr1, Fa18
+//									//
 /////////////////////////////////////////////////////////////////////
 /*
 Module Operations:
