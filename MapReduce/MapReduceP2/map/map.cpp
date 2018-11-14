@@ -1,98 +1,61 @@
-#ifndef MAPPER_CPP
-#define MAPPER_CPP
+#include "Map.h"
 
-#include "map.h"
-
-
-void Map::MapperFunc(std::string mediaFileName, std::string line, int BufSize_p)
+void Map::MapFunction(const std::string line, void(*exporting)(std::vector<std::pair<std::string, std::string>>, std::string), std::string median_file_name)
 {
-
-	BufSize = BufSize_p;
-
-	FileName = mediaFileName;
-	BufCount = 0;
-
-	std::transform(line.begin(), line.end(), line.begin(), ::tolower); //transfoer to lowercase
-
-	const char *str = line.c_str();
-
-	//assign token
-	std::vector<std::string>token = tokenizer(str);
-
-	//export token
-	exportToken(token);
-
+	if (line.size() != 0)
+	{
+		std::vector<std::pair<std::string, std::string>> tokenized_vector = Tokenizer(line);
+		exporting(tokenized_vector, median_file_name);
+	}
 }
 
-
-
-//take a line of string, convert to vectors of words
-std::vector<std::string> Map::tokenizer(const char *str)
+std::vector<std::pair<std::string,std::string>> Map::Tokenizer(std::string line)
 {
-	std::vector < std::string > result;
-
+	std::transform(line.begin(), line.end(), line.begin(), ::tolower); //transfoer to lowercase
+	std::vector<std::pair<std::string, std::string>> tokenized_vector;
+	/*
+	int word_start;
+	int i = 0;
+	
+	while(i!=line.size()-1)
+	{
+		word_start = i;
+		while (!std::ispunct(line[i]) && line[i] != ' ' && line[i] != '\t' && i != line.size() - 1)
+		{
+			i++;
+		}
+		tokenized_vector.push_back(std::make_pair(line.substr(word_start,i), "1"));
+		while ((std::ispunct(line[i]) || line[i] == ' ' || line[i] == '\t') && i!=line.size()-1)
+		{
+			i++;
+		}
+	}
+	*/
+	
+	const char *str = line.c_str();
+	int counter = 0;
 	while (*str)
 	{
 		const char *begin = str;
-
-		while (!std::ispunct(*str) && *str != ' ' && *str != '\t' && *str)
+		while (!std::ispunct(*str) && *str != ' ' && *str != '\t' &&*str)
 		{
 			str++;
+			counter += 1;
 		}
-
-		if (begin != str && !std::string(begin, str).empty()) {
-			result.push_back(std::string(begin, str));
+		//if (*str < 0) {
+			//*str = ' ';
+		//}
+		if (begin != str) {
+			tokenized_vector.push_back(std::make_pair(std::string(begin, str),"1"));
 		}
-
 		while ((std::ispunct(*str) || *str == ' ' || *str == '\t') && *str)
 		{
 			str++;
 		}
-	};
-
-	return result;
-}
-
-//write tokens as "word 1\n" to intermidiate file
-void Map::exportToken(std::vector<std::string> token)
-{
-
-
-	for (std::vector<std::string>::iterator it = token.begin(); it != token.end(); ++it)
-	{
-		Buffer << *it << " 1" << std::endl;
-		BufCount++;
+		//if (*str < 0) {
+			//memmove(str, str + 1, strlen(str) - counter);
+		//}
 	}
-
-	if (BufCount >= BufSize)
-	{
-
-		std::ofstream outfile(FileName, std::ios::app);
-
-		if (outfile.is_open()) {
-
-			outfile << Buffer.rdbuf();
-		}
-
-		BufCount = 0;
-		outfile.close();
-	}
-
+	
+	return tokenized_vector;
 }
-
-
-Map::~Map()
-{
-
-	std::ofstream outfile(FileName, std::ios::app);
-
-	if (outfile.is_open()) {
-
-		outfile << Buffer.rdbuf();
-	}
-
-	BufCount = 0;
-	outfile.close();
-}
-
-#endif

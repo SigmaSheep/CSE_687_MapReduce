@@ -1,38 +1,26 @@
-#include "reduce.h"
+#include "Reduce.h"
 
-
-Reduce::Reduce()
+void Reduce::reduceFunction(const std::vector<std::vector<std::string>> input_vector, void(*exporting)(const std::vector<std::vector<std::string>>, std::string), const std::string out_file_name)
 {
-}
+	std::vector<std::vector<std::string>> final_result = sumValues(input_vector);
+	exporting(final_result, out_file_name);
+};
 
-
-Reduce::~Reduce()
+std::vector<std::vector<std::string>> Reduce::sumValues(const std::vector<std::vector<std::string>> input_vector)
 {
-}
-
-std::vector<std::string> Reduce::reduceFunction(std::vector<std::string> sortedTokens)
-{
-	__int64 count = 0;
-	std::vector<std::string> reduce_result;
-
-	for (std::vector<std::string>::iterator it = sortedTokens.begin() + 1; it != sortedTokens.end(); ++it)
+	std::vector<std::vector<std::string>> final_result;
+	for (auto it = input_vector.begin(); it != input_vector.end(); ++it)
 	{
-		std::string tmp = *it;
-		std::string count_reuslt;
-
-
-		count = boost::count(tmp, '1');
-
-		tmp = tmp.substr(0, tmp.find(" "));
-		count_reuslt.append(tmp);
-		count_reuslt.append(" ");
-		count_reuslt.append(std::to_string(count));
-
-
-		count = 0;
-		reduce_result.push_back(count_reuslt);
+		std::vector<std::string> tmp_vector = *it;
+		std::vector<std::string> final_result_per_element;
+		final_result_per_element.push_back(tmp_vector.front());
+		int sum = 0;
+		for (auto it = tmp_vector.begin() + 1; it != tmp_vector.end(); ++it)
+		{
+			sum += std::stoi(*it);
+		}
+		final_result_per_element.push_back(std::to_string(sum));
+		final_result.push_back(final_result_per_element);
 	}
-
-	return reduce_result;
-
-}
+	return final_result;
+};

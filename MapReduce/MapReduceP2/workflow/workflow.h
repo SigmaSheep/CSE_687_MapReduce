@@ -1,4 +1,3 @@
-#pragma once
 #ifndef WORKFLOW_H
 #define WORKFLOW_H
 
@@ -31,30 +30,19 @@ Maintenance History:
 */
 //
 
-
-#include "../file_management/file_management.h"
-#include "../file_management/file_management.cpp"
-
-#include "../map/map.h"
-#include "../map/map.cpp"
-
-#include "../sort/sort.h"
-#include "../sort/sort.cpp"
-
-#include "../reduce/reduce.h"
-#include "../reduce/reduce.cpp"
+#include "../FileMgt/FileMgt.h"
+#include "../Map/Map.h"
+#include "../Sort/Sort.h"
+#include "../Reduce/Reduce.h"
 
 #include <string> // std::string
-
+#include <vector> // std::vector
 
 class WorkFlow
 {
 public:
 	WorkFlow() {};
 	~WorkFlow() {};
-
-	WorkFlow(std::string inPath_p, std::string mediaPath, std::string outPath);
-
+	WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path);
 };
-
 #endif

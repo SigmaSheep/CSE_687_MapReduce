@@ -1,13 +1,11 @@
-#include <iostream>
 #include <string>
-#include "..\workflow\workflow.h"
-#include "..\workflow\workflow.cpp"
+#include "../WorkFlow/WorkFlow.h"
+
 
 int main()
 {
-
-	std::string inPath, mediaPath, outPath;
-
+	std::string input_path, media_path, out_path;
+	/*
 	std::cout << "type input directory\n";
 	std::cin >> inPath;
 
@@ -16,8 +14,15 @@ int main()
 
 	std::cout << "type output directory\n";
 	std::cin >> outPath;
+	*/
 
-	WorkFlow(inPath, mediaPath, outPath);
+	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\input\\shakespeare";
+	media_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\median";
+	out_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\output";
+	
+	WorkFlow(input_path, media_path, out_path);
+	std::cout << "finished\n";
+	std::cin.get();
 
 	return 0;
 }

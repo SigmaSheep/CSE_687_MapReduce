@@ -1,40 +1,15 @@
 #ifndef REDUCE_H
-#define REDUCE_H
-/////////////////////////////////////////////////////////////////////
-//  Reduce.h -	   reduce function		    					   //
-//  ver 1.0                                                        //
-//  Language:      Visual C++ 2017                                 //
-//  Application:   Prototype for CSE687 Pr1, Fa18                  //
-/////////////////////////////////////////////////////////////////////
-/*
-Module Operations:
-==================
-This module reduce sorted token vector to reduced token vector
-Public Interface:
-=================
-reduceFunction(std::vector<std::string> sortedTokens);
-Take a sorted token vector like [A 1 1 1] [B 1 1] to a reduced
-token vector like [A 3][B 2]
-Required files
-================
-none
-Maintenance History:
-===============
-*/
-//
+#define	REDUCE_H
 
-#include <vector> // std::vector
-#include <string> // std::string
-#include <iostream> // std::cout
-#include <boost/range/algorithm/count.hpp> // boost::count
-
+#include <string>
+#include <vector>
 class Reduce
 {
 public:
-	Reduce();
-	~Reduce();
-
-	std::vector<std::string> reduceFunction(std::vector<std::string> sortedTokens);
+	Reduce() {};
+	~Reduce() {};
+	void reduceFunction(const std::vector<std::vector<std::string>> input_vector, void(*exporting)(const std::vector<std::vector<std::string>>, std::string),const std::string out_file_name);
+private:
+	std::vector<std::vector<std::string>> sumValues(const std::vector<std::vector<std::string>> input_vector);
 };
-
-#endif
+#endif // !REDUCE_H

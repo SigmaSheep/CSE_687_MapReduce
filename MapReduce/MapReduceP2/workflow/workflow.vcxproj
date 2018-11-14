@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{A25B2E1F-1E88-4E6F-A244-8E4925C78745}</ProjectGuid>
-    <RootNamespace>workflow</RootNamespace>
+    <ProjectGuid>{008CF471-CDAC-4313-A614-69AE47D236CA}</ProjectGuid>
+    <RootNamespace>WorkFlow</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -115,10 +115,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="workflow.h" />
+    <ClInclude Include="WorkFlow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="workflow.cpp" />
+    <ClCompile Include="WorkFlow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
+      <Project>{fa761945-35b6-4c1f-ad70-928d37dd0644}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Map\Map.vcxproj">
+      <Project>{6ff01ad8-068a-479f-b271-f2ee3b329acd}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Reduce\Reduce.vcxproj">
+      <Project>{23a92675-5865-48be-8704-ef5578f8136d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Sort\Sort.vcxproj">
+      <Project>{3d7174e1-a744-466e-929a-53936264f7b9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
