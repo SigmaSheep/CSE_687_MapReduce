@@ -1,6 +1,7 @@
 #ifndef MAPPER_H
 #define MAPPER_H
 
+
 #include<boost/tokenizer.hpp> // boost::tokenizer<>
 
 #include <algorithm> // std::transform()
