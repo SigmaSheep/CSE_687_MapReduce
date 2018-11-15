@@ -5,6 +5,30 @@ void exportingOutputFile(const std::vector<std::vector<std::string>> input_vecto
 
 WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path)
 {
+	typedef	void(*mapfunction)(const std::string, void(*exporting)(std::vector<std::pair<std::string, std::string>>, std::string), std::string);
+
+	HMODULE mapdll = LoadLibrary("mapdll.dll");
+	if (mapdll != NULL)
+	{
+		mapfunction Mapper = (mapfunction)GetProcAddress(mapdll, "MapFunction");
+		if (Mapper != NULL)
+		{
+			std::cout << "imported\n";
+		}
+		else {
+			std::cout << "not imported function\n";
+		}
+	}
+	else {
+		std::cout << "not imported dll\n";
+	}
+	std::string input_line = "test";
+	std::string median_file_name = "c:\\test.txt";
+	
+	Mapper(input_line, &exportingMedianFile, median_file_name);
+
+
+	/*
 	FileMgt file_mgt_instance;
 	std::vector<std::string> input_file_list = file_mgt_instance.fileIter(input_path);
 	//-----check------//file_mgt_instance.printvector(inputFileList);
@@ -19,7 +43,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, c
 		if (infile.is_open())
 		{
 			while (std::getline(infile, input_line))
-				mapper.MapFunction(input_line, &exportingMedianFile, median_file_name);
+				Mapper(input_line, &exportingMedianFile, median_file_name);
 		}
 		else
 		{
@@ -37,14 +61,16 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, c
 	//sort media result file
 	Sort sort_instance;
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens = sort_instance.sortAndGroup(sortable_tokens);
-	//-----check------//file_mgt_instance.printVectorVector(sorted_and_grouped_tokens);
-
+	//-----check------//
+	file_mgt_instance.printVectorVector(sorted_and_grouped_tokens);
+	
 	
 	std::string output_file_name = file_mgt_instance.createOutputFile(out_path);
 	//reduce to final result
 	Reduce Reduce_instance;
 	Reduce_instance.reduceFunction(sorted_and_grouped_tokens, exportingOutputFile, output_file_name);
 	
+*/
 }
 
 void exportingMedianFile(const std::vector<std::pair<std::string, std::string>> tokenized, std::string median_file_name)
@@ -84,3 +110,4 @@ void exportingOutputFile(const std::vector<std::vector<std::string>> input_vecto
 	}
 	outfile.close();
 };
+

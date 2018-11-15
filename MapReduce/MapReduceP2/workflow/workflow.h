@@ -37,6 +37,7 @@ Maintenance History:
 
 #include <string> // std::string
 #include <vector> // std::vector
+#include <Windows.h> // std::HINSTANCE
 
 class WorkFlow
 {
