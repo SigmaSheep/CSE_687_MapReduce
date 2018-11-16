@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="ReduceDll.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Map.cpp">
+    <ClCompile Include="ReduceDll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

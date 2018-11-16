@@ -31,10 +31,10 @@ Maintenance History:
 //
 
 #include "../FileMgt/FileMgt.h"
-#include "../Map/Map.h"
 #include "../Sort/Sort.h"
 #include "../Reduce/Reduce.h"
-
+#include "../MapInterface/MapInterface.h"
+#include "../ReduceInterface/ReduceInterface.h"
 #include <string> // std::string
 #include <vector> // std::vector
 #include <Windows.h> // std::HINSTANCE

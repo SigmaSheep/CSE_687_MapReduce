@@ -20,13 +20,13 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{008CF471-CDAC-4313-A614-69AE47D236CA}</ProjectGuid>
-    <RootNamespace>WorkFlow</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{AD83E5FE-001F-46DB-8127-FA12041B3506}</ProjectGuid>
+    <RootNamespace>ReduceDll</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -115,21 +115,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="WorkFlow.h" />
+    <ClInclude Include="ReduceDll.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="WorkFlow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
-      <Project>{fa761945-35b6-4c1f-ad70-928d37dd0644}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Reduce\reduce.vcxproj">
-      <Project>{23a92675-5865-48be-8704-ef5578f8136d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Sort\Sort.vcxproj">
-      <Project>{3d7174e1-a744-466e-929a-53936264f7b9}</Project>
-    </ProjectReference>
+    <ClCompile Include="ReduceDll.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

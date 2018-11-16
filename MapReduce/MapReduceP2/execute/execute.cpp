@@ -16,7 +16,7 @@ int main()
 	std::cin >> outPath;
 	*/
 
-	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\input\\shakespeare";
+	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\input";
 	media_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\median";
 	out_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\output";
 	

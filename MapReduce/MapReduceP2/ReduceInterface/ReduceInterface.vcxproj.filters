@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Reduce.h">
+    <ClInclude Include="ReduceInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Reduce.cpp">
+    <ClCompile Include="ReduceInterface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
