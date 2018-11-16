@@ -4,7 +4,7 @@
 
 int main()
 {
-	std::string input_path, media_path, out_path;
+	std::string input_path, media_path, out_path, map_dll_path, reduce_dll_path;
 	/*
 	std::cout << "type input directory\n";
 	std::cin >> inPath;
@@ -19,8 +19,10 @@ int main()
 	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\input";
 	media_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\median";
 	out_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\output";
+	map_dll_path = "..\\debug\\MapDll.dll";
+	reduce_dll_path = "..\\debug\\ReduceDll.dll";
 	
-	WorkFlow(input_path, media_path, out_path);
+	WorkFlow(input_path, media_path, out_path, map_dll_path, reduce_dll_path);
 	std::cout << "finished\n";
 	std::cin.get();
 

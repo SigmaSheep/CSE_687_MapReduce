@@ -6,9 +6,9 @@ void exportingOutputFile(const std::vector<std::vector<std::string>> input_vecto
 typedef MapInterface*(CALLBACK* MapHolder)();
 typedef ReduceInterface*(CALLBACK* ReduceHolder)();
 
-WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path)
+WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path, const std::string map_dll_path, const std::string reduce_dll_path)
 {
-	HMODULE h_mod_map = LoadLibrary("..\\debug\\MapDll.dll");
+	HMODULE h_mod_map = LoadLibrary(map_dll_path.c_str());
 	if (h_mod_map == nullptr) {
 		printf("LoadLibrary failed\n");
 	}
@@ -18,7 +18,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, c
 	}
 	MapInterface* map_pointer = mCtor();
 
-	HMODULE h_mod_reduce = LoadLibrary("..\\debug\\ReduceDll.dll");
+	HMODULE h_mod_reduce = LoadLibrary(reduce_dll_path.c_str());
 	if (h_mod_reduce == nullptr) {
 		printf("LoadLibrary failed\n");
 	}

@@ -32,7 +32,6 @@ Maintenance History:
 
 #include "../FileMgt/FileMgt.h"
 #include "../Sort/Sort.h"
-#include "../Reduce/Reduce.h"
 #include "../MapInterface/MapInterface.h"
 #include "../ReduceInterface/ReduceInterface.h"
 #include <string> // std::string
@@ -44,6 +43,6 @@ class WorkFlow
 public:
 	WorkFlow() {};
 	~WorkFlow() {};
-	WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path);
+	WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path, const std::string map_dll_path, const std::string reduce_dll_path);
 };
 #endif
