@@ -20,13 +20,13 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{02DADD5A-11AE-4901-B967-2DFD92FC43A3}</ProjectGuid>
-    <RootNamespace>ReduceInterface</RootNamespace>
+    <ProjectGuid>{065A7929-4E30-4B3E-A30D-0D18B133A4E8}</ProjectGuid>
+    <RootNamespace>Execute</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -115,10 +115,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ReduceInterface.h" />
+    <ClCompile Include="Execute.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ReduceInterface.cpp" />
+    <ProjectReference Include="..\WorkFlow\WorkFlow.vcxproj">
+      <Project>{008cf471-cdac-4313-a614-69ae47d236ca}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
