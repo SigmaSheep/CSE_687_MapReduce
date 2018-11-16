@@ -10,20 +10,29 @@
 
 class Reduce_Dll ReduceClass : public ReduceInterface {
 public:
-	virtual void reduceFunction(const std::vector<std::vector<std::string>> input_vector, void(*exporting)(const std::vector<std::vector<std::string>>, std::string), const std::string out_file_name);
-	std::vector<std::vector<std::string>> sumValues(const std::vector<std::vector<std::string>> input_vector);
+	virtual void ReduceFunction(
+		const std::vector<std::vector<std::string>> input_vector,
+		void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
+		const std::string out_file_name);
+	std::vector<std::vector<std::string>> sumValues(
+		const std::vector<std::vector<std::string>> input_vector);
 
 };
 
-extern "C" Reduce_Dll ReduceInterface* createReduceIns() { return new ReduceClass(); }
+extern "C" Reduce_Dll ReduceInterface* createReduceIns()
+	{ return new ReduceClass(); }
 
-void ReduceClass::reduceFunction(const std::vector<std::vector<std::string>> input_vector, void(*exporting)(const std::vector<std::vector<std::string>>, std::string), const std::string out_file_name)
+void ReduceClass::ReduceFunction(
+	const std::vector<std::vector<std::string>> input_vector,
+	void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
+	const std::string out_file_name)
 {
 	std::vector<std::vector<std::string>> final_result = sumValues(input_vector);
 	exporting(final_result, out_file_name);
 }
 
-std::vector<std::vector<std::string>> ReduceClass::sumValues(const std::vector<std::vector<std::string>> input_vector)
+std::vector<std::vector<std::string>> ReduceClass::sumValues(
+	const std::vector<std::vector<std::string>> input_vector)
 {
 	std::vector<std::vector<std::string>> final_result;
 	for (auto it = input_vector.begin(); it != input_vector.end(); ++it)

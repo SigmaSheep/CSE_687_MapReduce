@@ -16,15 +16,13 @@ int main()
 	std::cin >> outPath;
 	*/
 
-	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\input";
+	input_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\shakespeare";
 	media_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\median";
 	out_path = "C:\\Users\\liuxi\\OneDrive\\Desktop\\test\\output";
 	map_dll_path = "..\\debug\\MapDll.dll";
 	reduce_dll_path = "..\\debug\\ReduceDll.dll";
 	
 	WorkFlow(input_path, media_path, out_path, map_dll_path, reduce_dll_path);
-	std::cout << "finished\n";
-	std::cin.get();
 
 	return 0;
 }

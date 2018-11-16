@@ -34,6 +34,8 @@ Maintenance History:
 #include "../Sort/Sort.h"
 #include "../MapInterface/MapInterface.h"
 #include "../ReduceInterface/ReduceInterface.h"
+
+#include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(info)
 #include <string> // std::string
 #include <vector> // std::vector
 #include <Windows.h> // std::HINSTANCE
@@ -43,6 +45,8 @@ class WorkFlow
 public:
 	WorkFlow() {};
 	~WorkFlow() {};
-	WorkFlow(const std::string input_path, const std::string media_path, const std::string out_path, const std::string map_dll_path, const std::string reduce_dll_path);
+	WorkFlow(const std::string input_path, const std::string media_path, 
+		const std::string out_path, const std::string map_dll_path, 
+		const std::string reduce_dll_path);
 };
 #endif

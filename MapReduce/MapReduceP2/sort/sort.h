@@ -11,7 +11,8 @@ class Sort
 public:
 	Sort() {};
 	~Sort() {};
-	std::vector<std::vector<std::string>> sortAndGroup(const std::vector<std::pair<std::string, std::string>> sortableTokens);
+	std::vector<std::vector<std::string>> sortAndGroup(
+		const std::vector<std::pair<std::string, std::string>> sortableTokens);
 };
 
 #endif

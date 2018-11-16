@@ -19,7 +19,8 @@ std::vector<std::string> FileMgt::fileIter(const std::string path_p)
 
 void FileMgt::printvector(const std::vector<std::string> input_vector)
 {
-	for (std::vector<std::string>::const_iterator it = input_vector.begin(); it != input_vector.end(); ++it)
+	for (std::vector<std::string>::const_iterator it = input_vector.begin();
+		it != input_vector.end(); ++it)
 	{
 		std::cout << *it << std::endl;
 	}
@@ -28,18 +29,19 @@ void FileMgt::printvector(const std::vector<std::string> input_vector)
 std::string FileMgt::createMedianFile(const std::string media_path)
 {
 	std::string media_file_name = media_path + std::string("\\intermediate.txt");
-	std::ofstream file(media_file_name, std::ios::out); // create a media file or clear an existing one
+	std::ofstream file(media_file_name, std::ios::out); // create& clear a file
 	return media_file_name;
 };
 
 std::string FileMgt::createOutputFile(const std::string out_path)
 {
 	std::string output_file_name = out_path + std::string("\\final_result.txt");
-	std::ofstream file(output_file_name, std::ios::out); // create a output file or clear an existing one
+	std::ofstream file(output_file_name, std::ios::out); // create& clear a file
 	return output_file_name;
 };
 
-std::vector<std::pair<std::string, std::string>> FileMgt::readList(const std::vector<std::string> meidan_file_list)
+std::vector<std::pair<std::string, std::string>> FileMgt::readList(
+	const std::vector<std::string> meidan_file_list)
 {
 	std::vector<std::pair<std::string, std::string>> sortable_token_list;
 
@@ -54,7 +56,9 @@ std::vector<std::pair<std::string, std::string>> FileMgt::readList(const std::ve
 			while (std::getline(infile, line))
 			{
 				size_t pos = line.find(delimiter);
-				std::pair<std::string,std::string> key_and_value = std::make_pair(line.substr(0, pos), line.substr(pos + 1, line.size()));
+				std::pair<std::string,std::string> key_and_value =
+					std::make_pair(line.substr(0, pos),
+						line.substr(pos + 1, line.size()));
 				sortable_token_list.push_back(key_and_value);
 			}
 		}
@@ -67,7 +71,8 @@ std::vector<std::pair<std::string, std::string>> FileMgt::readList(const std::ve
 	return sortable_token_list;
 }
 
-void FileMgt::printPairVector(const std::vector<std::pair<std::string, std::string>> input_vector)
+void FileMgt::printPairVector(const std::vector<std::pair<std::string,
+	std::string>> input_vector)
 {
 	std::pair<std::string, std::string> key_and_value;
 	for (auto it = input_vector.begin(); it != input_vector.end(); ++it)
@@ -77,7 +82,8 @@ void FileMgt::printPairVector(const std::vector<std::pair<std::string, std::stri
 	}
 };
 
-void FileMgt::printVectorVector(const std::vector<std::vector<std::string>> input_vector)
+void FileMgt::printVectorVector(
+	const std::vector<std::vector<std::string>> input_vector)
 {
 	for (auto it = input_vector.begin(); it != input_vector.end(); ++it)
 	{

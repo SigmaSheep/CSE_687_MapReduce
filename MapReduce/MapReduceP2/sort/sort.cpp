@@ -1,9 +1,15 @@
 #include "Sort.h"
 
-std::vector<std::vector<std::string>> Sort::sortAndGroup(const std::vector<std::pair<std::string, std::string>> sortableTokens)
+std::vector<std::vector<std::string>> Sort::sortAndGroup(
+	const std::vector<std::pair<std::string, std::string>> sortableTokens)
 {
-	std::vector<std::pair<std::string, std::string>> copied_tokens = sortableTokens;
-	std::sort(copied_tokens.begin(), copied_tokens.end(), [](const std::pair<std::string, std::string> &left, const std::pair<std::string, std::string> &right) {return left.first < right.first; });
+	std::vector<std::pair<std::string, std::string>>
+		copied_tokens = sortableTokens;
+	std::sort(copied_tokens.begin(), copied_tokens.end(),
+		[](const std::pair<std::string, std::string> &left,
+		const std::pair<std::string, std::string> &right) 
+		{return left.first < right.first; });
+
 	std::string word;
 	std::vector<std::string> grouped_element;
 	std::vector<std::vector<std::string>> grouped_vector;
