@@ -124,9 +124,6 @@
     <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
       <Project>{fa761945-35b6-4c1f-ad70-928d37dd0644}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Reduce\reduce.vcxproj">
-      <Project>{23a92675-5865-48be-8704-ef5578f8136d}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Sort\Sort.vcxproj">
       <Project>{3d7174e1-a744-466e-929a-53936264f7b9}</Project>
     </ProjectReference>

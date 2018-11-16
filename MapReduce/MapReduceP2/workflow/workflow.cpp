@@ -41,9 +41,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path, c
 		if (infile.is_open())
 		{
 			while (std::getline(infile, input_line))
-				std::cout << input_line << "1\n";
 				map_pointer->MapFunction(input_line, &exportingMedianFile, median_file_name);
-				std::cout << input_line << "2\n";
 		}
 		else
 		{
@@ -78,8 +76,6 @@ void exportingMedianFile(const std::vector<std::pair<std::string, std::string>> 
 		for (auto it = tokenized.begin(); it != tokenized.end(); ++it)
 		{
 			std::pair<std::string, std::string> tmp_pair = *it;
-			outfile << tmp_pair.first << " " << tmp_pair.second << std::endl;
-
 			outfile << tmp_pair.first << " " << tmp_pair.second << std::endl;
 		}
 	}
