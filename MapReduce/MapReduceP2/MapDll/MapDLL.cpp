@@ -2,7 +2,6 @@
 #define MAPDLL_CPP
 
 #include "../MapInterface/MapInterface.h"
-#include<boost/tokenizer.hpp> // boost::tokenizer<>
 
 #include <algorithm> // std::transform()
 #include <cctype> // std::ispunct()
