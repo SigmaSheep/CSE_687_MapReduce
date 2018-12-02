@@ -24,11 +24,13 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	HMODULE h_mod_map = LoadLibrary(map_dll_path.c_str());
 	if (h_mod_map == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "Load map library failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	MapHolder mCtor = (MapHolder)GetProcAddress(h_mod_map, "createMapIns");
 	if (mCtor == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "GetProcAddress map dll failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	MapInterface* map_pointer = mCtor();
@@ -36,12 +38,14 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	HMODULE h_mod_reduce = LoadLibrary(reduce_dll_path.c_str());
 	if (h_mod_reduce == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "Load reduce library failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	ReduceHolder rCtor = (ReduceHolder)GetProcAddress(h_mod_reduce,
 		"createReduceIns");
 	if (mCtor == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "GetProcAddress reduce dll failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	ReduceInterface* reduce_pointer = rCtor();
@@ -102,6 +106,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 
 	FreeLibrary(h_mod_map);
 	FreeLibrary(h_mod_reduce);
+	BOOST_LOG_TRIVIAL(info) << " Work finished\n";
 }
 //////////////////////////////////////////////////////////////////////////////////
 // void exportingMedianFile(

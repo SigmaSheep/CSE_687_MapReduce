@@ -27,16 +27,19 @@ int main() {
 		reduce_dll_path, map_dll_path_default, reduce_dll_path_default;
 
 	std::cout << "type input directory\n";
-	std::cin >> input_path;
+	//std::cin >> input_path;
+	input_path = "C:/Users/Xin-PC/Desktop/test/input";
 
 	std::cout << "type intermediate directory\n";
-	std::cin >> media_path;
+	//std::cin >> media_path;
+	media_path = "C:/Users/Xin-PC/Desktop/test/median";
 
 	std::cout << "type output directory\n";
-	std::cin >> out_path;
+	//std::cin >> out_path;
+	out_path = "C:/Users/Xin-PC/Desktop/test/output";
 
-	map_dll_path_default = ".\\MapDll.dll";
-	reduce_dll_path_default = ".\\ReduceDll.dll";
+	map_dll_path_default = "../x64/debug/MapDll.dll";
+	reduce_dll_path_default = "../x64/debug/ReduceDll.dll";
 
 	std::cout << "enter d to use default path for map dll\n";
 	std::cin >> map_dll_path;
@@ -51,5 +54,7 @@ int main() {
 	}
 
 	WorkFlow(input_path, media_path, out_path, map_dll_path, reduce_dll_path);
+	std::cin.ignore();
+	std::cin.get();
 	return 0;
 }

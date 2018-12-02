@@ -12,6 +12,7 @@
 #include <tchar.h>
 #include <Windows.h>
 
+
 void exportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::string median_file_name);
@@ -160,11 +161,41 @@ TEST_F(testallclass, testReduce_reduceFunction) {
 	read_out_file.close();
 }
 
+TEST_F(testallclass, testFileMgtPartitionFunction) {
+	std::ofstream f1("./input2/f1.txt", std::ios::out);
+	std::ofstream f2("./input2/f2.txt", std::ios::out);
+	std::ofstream f3("./input2/f3.txt", std::ios::out);
+	std::ofstream f4("./input2/f4.txt", std::ios::out);
+	std::ofstream f5("./input2/f5.txt", std::ios::out);
+	std::ofstream f6("./input2/f6.txt", std::ios::out);
+	std::ofstream f7("./input2/f7.txt", std::ios::out);
+	f1.close();
+	f2.close();
+	f3.close();
+	f4.close();
+	f5.close();
+	f6.close();
+	f7.close();
+	FileMgt file_management_class_test;
+	std::vector<std::string> file_list = 
+		file_management_class_test.fileIter("./input2");
+	std::vector<std::vector<std::string>> partioned_list =
+		file_management_class_test.PartitionFunction(3,file_list);
+
+	int len = partioned_list[0][0].length();
+	EXPECT_EQ("f1.txt", partioned_list[0][0].substr(len - 6, len));
+	EXPECT_EQ("f2.txt", partioned_list[0][1].substr(len - 6, len));
+	EXPECT_EQ("f3.txt", partioned_list[1][0].substr(len - 6, len));
+	EXPECT_EQ("f4.txt", partioned_list[1][1].substr(len - 6, len));
+	EXPECT_EQ("f5.txt", partioned_list[2][0].substr(len - 6, len));
+	EXPECT_EQ("f6.txt", partioned_list[2][1].substr(len - 6, len));
+	EXPECT_EQ("f7.txt", partioned_list[2][2].substr(len - 6, len));
+}
+
 int main(int argc, char* argv[]) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
-
 
 void exportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,

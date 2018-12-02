@@ -86,3 +86,21 @@ void FileMgt::printVectorVector(
 		std::cout << "\n";
 	}
 };
+
+// partition function to divide input files to R parts
+std::vector<std::vector<std::string>> FileMgt::PartitionFunction(
+	int count, const std::vector<std::string> input_file_list) {
+	std::vector<std::vector<std::string>> partial_list;
+
+	int elements_per_part = input_file_list.size() / count;
+	for (int i = 0; i < (count-1); i++) {
+		auto start_po = input_file_list.begin() + (i * elements_per_part);
+		auto end_po = input_file_list.begin() + ((i + 1) * elements_per_part);
+		std::vector<std::string> tmp(start_po,end_po);
+		partial_list.push_back(tmp);
+	}
+	auto start_po = input_file_list.begin() + ((count - 1) * elements_per_part);
+	std::vector<std::string> tmp(start_po, input_file_list.end());
+	partial_list.push_back(tmp);
+	return partial_list;
+}
