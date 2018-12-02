@@ -76,6 +76,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 		}
 		else {
 			BOOST_LOG_TRIVIAL(error) << "Open input files failed\n";
+			std::cin.get();
 			std::exit(EXIT_FAILURE);
 		}
 		infile.close();
@@ -130,6 +131,7 @@ void exportingMedianFile(
 	}
 	else {
 		BOOST_LOG_TRIVIAL(error) << "Open median files failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	outfile.close();
@@ -160,6 +162,7 @@ void exportingOutputFile(
 	}
 	else {
 		BOOST_LOG_TRIVIAL(error) << "Open output files failed\n";
+		std::cin.get();
 		std::exit(EXIT_FAILURE);
 	}
 	outfile.close();
