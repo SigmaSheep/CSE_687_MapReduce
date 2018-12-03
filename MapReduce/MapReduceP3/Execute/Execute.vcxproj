@@ -72,6 +72,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -88,6 +92,9 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

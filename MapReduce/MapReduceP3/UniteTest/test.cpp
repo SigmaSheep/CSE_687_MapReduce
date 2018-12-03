@@ -1,11 +1,9 @@
 #include "pch.h"
 
 #include "../FileMgt/file_mgt.h"
-#include "../FileMgt/file_mgt.cpp"
 #include "../MapInterface/map_interface.h"
 #include "../ReduceInterface/reduce_interface.h"
 #include "../Sort/sort.h"
-#include "../Sort/sort.cpp"
 #include <fstream>
 #include <vector>
 #include <string>
@@ -82,7 +80,7 @@ TEST_F(testallclass, testFileMgt_FileIter) {
 	std::vector<std::string> file_list;
 	FileMgt file_management_class_test;
 	file_list = file_management_class_test.fileIter(input_path);
-	int len = file_list[0].length();
+	auto len = file_list[0].length();
 	EXPECT_EQ("ifls.txt", file_list[0].substr(len - 8, len));
 }
 
@@ -179,17 +177,13 @@ TEST_F(testallclass, testFileMgtPartitionFunction) {
 	FileMgt file_management_class_test;
 	std::vector<std::string> file_list = 
 		file_management_class_test.fileIter("./input2");
-	std::vector<std::vector<std::string>> partioned_list =
-		file_management_class_test.PartitionFunction(3,file_list);
+	std::vector<std::string> partioned_list =
+		file_management_class_test.AllocateInputFiles(3,file_list);
 
-	int len = partioned_list[0][0].length();
-	EXPECT_EQ("f1.txt", partioned_list[0][0].substr(len - 6, len));
-	EXPECT_EQ("f2.txt", partioned_list[0][1].substr(len - 6, len));
-	EXPECT_EQ("f3.txt", partioned_list[1][0].substr(len - 6, len));
-	EXPECT_EQ("f4.txt", partioned_list[1][1].substr(len - 6, len));
-	EXPECT_EQ("f5.txt", partioned_list[2][0].substr(len - 6, len));
-	EXPECT_EQ("f6.txt", partioned_list[2][1].substr(len - 6, len));
-	EXPECT_EQ("f7.txt", partioned_list[2][2].substr(len - 6, len));
+	auto len = partioned_list[0].length();
+	EXPECT_EQ("./input2\\f1.txt ./input2\\f2.txt ", partioned_list[0]);
+	EXPECT_EQ("./input2\\f3.txt ./input2\\f4.txt ", partioned_list[1]);
+	EXPECT_EQ("./input2\\f5.txt ./input2\\f6.txt ./input2\\f7.txt ", partioned_list[2]);
 }
 
 int main(int argc, char* argv[]) {

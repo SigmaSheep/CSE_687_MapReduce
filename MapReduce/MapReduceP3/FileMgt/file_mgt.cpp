@@ -87,20 +87,30 @@ void FileMgt::printVectorVector(
 	}
 };
 
-// partition function to divide input files to R parts
-std::vector<std::vector<std::string>> FileMgt::PartitionFunction(
+// divide input files to m parts according to how many map processes
+// also make string ready for CreateProcess argument type like "path1 path2 ...pathn" 
+std::vector<std::string> FileMgt::AllocateInputFiles(
 	int count, const std::vector<std::string> input_file_list) {
-	std::vector<std::vector<std::string>> partial_list;
-
-	int elements_per_part = input_file_list.size() / count;
+	std::vector<std::string> divided_file_list;
+	auto elements_per_part = input_file_list.size() / count;
 	for (int i = 0; i < (count-1); i++) {
 		auto start_po = input_file_list.begin() + (i * elements_per_part);
 		auto end_po = input_file_list.begin() + ((i + 1) * elements_per_part);
-		std::vector<std::string> tmp(start_po,end_po);
-		partial_list.push_back(tmp);
+		std::string path_for_one_mapper;
+		for (auto it = start_po; it != end_po; ++it) {
+			path_for_one_mapper.append(*it);
+			path_for_one_mapper.append(" ");
+		}
+		divided_file_list.push_back(path_for_one_mapper);
 	}
 	auto start_po = input_file_list.begin() + ((count - 1) * elements_per_part);
-	std::vector<std::string> tmp(start_po, input_file_list.end());
-	partial_list.push_back(tmp);
-	return partial_list;
+	std::string path_for_one_mapper;
+	for (auto it = start_po; it != input_file_list.end(); ++it) {
+		path_for_one_mapper.append(*it);
+		path_for_one_mapper.append(" ");
+	}
+	divided_file_list.push_back(path_for_one_mapper);
+
+	return divided_file_list;
 }
+
