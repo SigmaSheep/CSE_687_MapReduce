@@ -21,7 +21,8 @@ int main(int argc, char * argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 	int mapper_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
-	BOOST_LOG_TRIVIAL(info) << "Mapper process #"<< mapper_process_id<<" is created\n";
+	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
+		<< mapper_process_id<<" is created\n";
 	std::string map_dll_path = argv[1];
 	int r_count = boost::lexical_cast<int>(argv[2]);//cast to int
 	std::string median_path = argv[3];
@@ -59,19 +60,23 @@ int main(int argc, char * argv[]) {
 			BOOST_LOG_TRIVIAL(info) <<"Mapper #"<< mapper_process_id 
 				<< " is mapping input file: \n" << std::string(52, ' ') 
 				<< *it<<"\n";
-			while (std::getline(infile, input_line)) {// read each line
-				map_pointer->MapFunction(input_line, &exportingMedianFile,
+			while (std::getline(infile, input_line)) {// read line
+				map_pointer->MapFunction(input_line,
+					&exportingMedianFile,
 					median_file_name_list);//call MapFunction from Dll
 			}
 		} else {
-			BOOST_LOG_TRIVIAL(error) << "Open below input file failed\n";
-			BOOST_LOG_TRIVIAL(error) << *it;
+			BOOST_LOG_TRIVIAL(error)
+				<< "Open below input file failed\n"
+				<< std::string(52, ' ')
+				<< *it << "\n";
 			std::exit(EXIT_FAILURE);
 		}
 		infile.close();
 	}
 	FreeLibrary(h_mod_map);
-	BOOST_LOG_TRIVIAL(info) << "Mapper process #" << mapper_process_id << " ended";
+	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
+		<< mapper_process_id << " ended";
 	return 0;
 }
 

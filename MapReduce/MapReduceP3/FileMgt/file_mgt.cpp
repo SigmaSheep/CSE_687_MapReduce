@@ -29,11 +29,12 @@ std::vector<std::string> FileMgt::createMedianFile(int proc_id, int r_count,
 	const std::string media_path) {
 	std::vector<std::string > median_file_list;
 	for (int i = 0; i < r_count; i++) {
-		std::string media_file_name = media_path + std::string("\\intermediate")
-			+std::to_string(proc_id) +"_"
-			+std::to_string(i) +std::string(".txt");
+		std::string media_file_name = media_path + 
+			std::string("\\intermediate") +std::to_string(proc_id)
+			+"_" +std::to_string(i) +std::string(".txt");
 		median_file_list.push_back(media_file_name);
-		std::ofstream file(media_file_name, std::ios::out); // create& clear a file
+		// create& clear a file
+		std::ofstream file(media_file_name, std::ios::out);
 	}
 	
 	return median_file_list;

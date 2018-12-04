@@ -32,13 +32,14 @@ Maintenance History:
 class Map_DLL MapClass : public MapInterface {
 public:
 	virtual void MapFunction(const std::string line, //first arg
-		void(*exporting)(std::vector<std::pair<std::string, std::string>>,//2nd arg
+		void(*exporting)(std::vector<std::pair
+			<std::string, std::string>>,//2nd arg
 			std::vector<std::string>),
 		std::vector<std::string> median_file_list);//3rd arg
 private:
 	std::string map_value = "1";
-	std::vector<std::pair<std::string, std::string>> Tokenizer(std::string line,
-		std::string map_value);
+	std::vector<std::pair<std::string, std::string>> Tokenizer(
+		std::string line, std::string map_value);
 	bool ValidChar(const char c) { return (c < -1 || c>255) ? false : true; };
 };
 
