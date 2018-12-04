@@ -55,9 +55,19 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	std::vector<std::string> input_file_list =
 		file_mgt_instance.fileIter(input_path);
 	// divide input files based on the map count
-	std::vector<std::string> divided_file_list = 
+	std::vector<std::string> divided_file_list =
 		file_mgt_instance.AllocateInputFiles(m_count, input_file_list);
 	//file_mgt_instance.printvector(divided_file_list);
+
+	//combine additional arguments process_id, map_dll_path, number of reducer, median_file_path
+	std::vector<std::string> argument_ready_mapper_input;
+	int tmp_count = 0;
+	for (auto it = divided_file_list.begin(); it != divided_file_list.end(); ++it) {
+		argument_ready_mapper_input.push_back(std::to_string(tmp_count)+ " "
+			+ map_dll_path + " " + std::to_string(r_count) + " "
+			+ media_path + " " + divided_file_list[tmp_count]);
+		tmp_count++;
+	}
 
 	STARTUPINFO start_info; // establishes properties of child process
 	GetStartupInfo(&start_info);
@@ -69,7 +79,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	for (int i = 0; i < m_count; i++) {
 		PROCESS_INFORMATION tmp_process_info;
 		LPPROCESS_INFORMATION procee_retrive_infor = &tmp_process_info;
-		LPTSTR  command_line = (char *)divided_file_list[i].c_str();    // main's args
+		LPTSTR  command_line = (char *)argument_ready_mapper_input[i].c_str();    // main's args
 
 		BOOL process_status = CreateProcess(app_name, command_line, NULL, NULL, FALSE,
 			NULL, NULL, NULL, process_start_info, procee_retrive_infor);

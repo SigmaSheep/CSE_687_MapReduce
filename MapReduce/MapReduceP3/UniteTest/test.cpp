@@ -44,7 +44,7 @@ public:
 	std::string median_file = ".\\median\\intermediate.txt";
 	std::string output_name = ".\\output\\final_result.txt";
 };
-
+/*
 TEST_F(testallclass, testMapDll) {
 	FileMgt file_management_class_test;
 	file_management_class_test.createMedianFile(median_path);
@@ -75,7 +75,7 @@ TEST_F(testallclass, testMapDll) {
 	}
 	read_file.close();
 }
-
+*/
 TEST_F(testallclass, testFileMgt_FileIter) {
 	std::vector<std::string> file_list;
 	FileMgt file_management_class_test;
