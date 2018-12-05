@@ -25,38 +25,63 @@ void FileMgt::printvector(const std::vector<std::string> input_vector) {
 }
 
 // create multiple median files and clear file if already exists
-std::vector<std::string> FileMgt::createMedianFile(int proc_id, int r_count, 
+std::vector<std::string> FileMgt::createMedianFiles(int proc_id, int r_count,
 	const std::string media_path) {
 	std::vector<std::string > median_file_list;
 	for (int i = 0; i < r_count; i++) {
 		std::string media_file_name = media_path + 
-			std::string("\\intermediate") +std::to_string(proc_id)
+			std::string("/intermediate") +std::to_string(proc_id)
 			+"_" +std::to_string(i) +std::string(".txt");
 		median_file_list.push_back(media_file_name);
 		// create& clear a file
 		std::ofstream file(media_file_name, std::ios::out);
 	}
-	
 	return median_file_list;
 };
 
+// create files ready for reduce
+std::vector<std::string> FileMgt::CreateReducebleFiles(int r_count,
+	std::string media_path) {
+	std::vector<std::string> reduceble_file_name_list;
+	for (int i = 0; i < r_count; i++) {
+		std::string reduceble_file_name = 
+			media_path + std::string("/reduceble")+std::to_string(i)
+			+std::string(".txt");
+		std::ofstream file(reduceble_file_name,
+			std::ios::out); // create& clear a file
+		reduceble_file_name_list.push_back(reduceble_file_name);
+	}
+	return reduceble_file_name_list;
+};
+
 // create output file and clear a file if already exists
-std::string FileMgt::createOutputFile(const std::string out_path) {
-	std::string output_file_name = out_path + std::string("\\final_result.txt");
+std::string FileMgt::createOutputFile(int reducer_id, 
+	const std::string out_path) {
+	std::string output_file_name = out_path + std::string("/final_result")
+		+ std::to_string(reducer_id) +std::string(".txt");
 	std::ofstream file(output_file_name, std::ios::out); // create& clear a file
 	return output_file_name;
 };
 
-// read a list of median files and return a vector of pairs contain key and value
-std::vector<std::pair<std::string, std::string>> FileMgt::readList(
-	const std::vector<std::string> meidan_file_list) {
-	std::vector<std::pair<std::string, std::string>> sortable_token_list;
+// read a list of mediate files for a specific reducer
+// return a vector contains pairs of key and value
+std::vector<std::pair<std::string, std::string>> FileMgt::ReadMediateFiles(
+	int reducer_id, int r_count, std::string media_path) {
+	std::string reduceble_file_name_tmp;
+	std::vector<std::string> reduceble_file_list;
+	for (int j = 0; j < r_count; j++) {// j represents process id
+		reduceble_file_name_tmp = media_path +
+			std::string("/intermediate") + std::to_string(j)
+			+ "_" + std::to_string(reducer_id) + std::string(".txt");
+		reduceble_file_list.push_back(reduceble_file_name_tmp);
+	}
 
-	for (auto it = meidan_file_list.begin(); it != meidan_file_list.end(); ++it) {
+	std::vector<std::pair<std::string, std::string>> sortable_token_list;
+	for (auto it = reduceble_file_list.begin(); 
+		it != reduceble_file_list.end(); ++it) {
 		std::string delimiter = " ";
 		std::ifstream infile(*it);
 		std::string line;
-
 		if (infile.is_open()) {
 			while (std::getline(infile, line)) {
 				size_t pos = line.find(delimiter);
@@ -64,9 +89,8 @@ std::vector<std::pair<std::string, std::string>> FileMgt::readList(
 					std::make_pair(line.substr(0, pos),
 						line.substr(pos + 1, line.size()));
 				sortable_token_list.push_back(key_and_value);
-			}
-		}
-		else {
+			} 
+		} else {
 			std::cout << "file is not open" << std::endl;
 		}
 		infile.close();
@@ -103,23 +127,43 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 	std::vector<std::string> divided_file_list;
 	auto elements_per_part = input_file_list.size() / count;
 	for (int i = 0; i < (count-1); i++) {
-		auto start_po = input_file_list.begin() + (i * elements_per_part);
-		auto end_po = input_file_list.begin() + ((i + 1) * elements_per_part);
+		auto start_position = input_file_list.begin() + (i * elements_per_part);
+		auto end_position = input_file_list.begin() + ((i + 1) * elements_per_part);
 		std::string path_for_one_mapper;
-		for (auto it = start_po; it != end_po; ++it) {
+		for (auto it = start_position; it != end_position; ++it) {
 			path_for_one_mapper.append(*it);
 			path_for_one_mapper.append(" ");
 		}
 		divided_file_list.push_back(path_for_one_mapper);
 	}
-	auto start_po = input_file_list.begin() + ((count - 1) * elements_per_part);
+	auto start_position = input_file_list.begin() + ((count - 1) * elements_per_part);
 	std::string path_for_one_mapper;
-	for (auto it = start_po; it != input_file_list.end(); ++it) {
+	for (auto it = start_position; it != input_file_list.end(); ++it) {
 		path_for_one_mapper.append(*it);
 		path_for_one_mapper.append(" ");
 	}
 	divided_file_list.push_back(path_for_one_mapper);
-
 	return divided_file_list;
 }
 
+void FileMgt::WriteReducebleFile(std::string reduceble_file_name,
+	std::vector<std::vector<std::string>> sorted_and_grouped_tokens) {
+	// reduceble_file_name should be an empty file 
+	// because CreateRe..Files always clear it
+	std::ofstream outfile(reduceble_file_name);
+	if (!outfile.is_open()) {
+		BOOST_LOG_TRIVIAL(error)<<"Reduceble_file is failed to open:"
+			<< std::string(52, ' ') << reduceble_file_name << "\n";
+		std::exit(EXIT_FAILURE);
+	} else {
+		for (auto it = sorted_and_grouped_tokens.begin(); 
+			it != sorted_and_grouped_tokens.end(); ++it) {
+			std::vector<std::string> inside_vector = *it;
+			for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
+				outfile << *it << " ";
+			}
+			outfile << "\n";
+		}
+	}
+	outfile.close();
+}

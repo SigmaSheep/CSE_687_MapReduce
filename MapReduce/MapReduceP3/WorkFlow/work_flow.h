@@ -38,7 +38,9 @@ Maintenance History:
 #include <string> // std::string
 #include <tchar.h> // TCHAR _T
 #include <vector> // std::vector
-#include <Windows.h> // std::HINSTANCE
+#include <Windows.h> // STARTUPINFO, GetStartupInfo(), LPSTARTUPINFO, 
+//LPCTSTR, PROCESS_INFORMATION, LPPROCESS_INFORMATION, CreateProcess()
+//CloseHandle(), WaitForSingleObject()
 
 class WorkFlow {
 public:

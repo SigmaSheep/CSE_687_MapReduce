@@ -17,6 +17,7 @@
 
 #include "../ReduceInterface/reduce_interface.h"
 
+#include <iostream>
 #include <string>  // std::string
 #include <vector>  // std::vector
 

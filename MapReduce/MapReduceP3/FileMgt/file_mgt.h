@@ -19,10 +19,8 @@ Maintenance History:
 */
 //
 
-#include "boost/algorithm/string.hpp"
-//#include "boost/algorithm/string.hpp" // boost::split
-#include "boost/filesystem.hpp"
-
+#include <boost/filesystem.hpp>
+#include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(info/error)
 #include <fstream>// std::ofstream, std::ifstream
 #include <iostream> // std::cout
 #include <string> // std::transform(), std::string
@@ -40,12 +38,15 @@ public:
 		std::string>> input_vector);
 	void printVectorVector(
 		const std::vector<std::vector<std::string>> input_vector);
-	std::vector<std::string> createMedianFile(int proc_id,
+	std::vector<std::string> createMedianFiles(int proc_id,
 		int r_count, const std::string media_path);
-	std::string createOutputFile(const std::string out_path);
-	std::vector<std::pair<std::string, std::string>> readList(
-		const std::vector<std::string> meidan_file_list);
+	std::vector<std::string> CreateReducebleFiles(int r_count, std::string media_path);
+	std::string createOutputFile(int reducer_id, const std::string out_path);
+	std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
+		int reducer_id, int r_count, std::string media_path);
 	std::vector<std::string> AllocateInputFiles(
 		int count, const std::vector<std::string> input_file_list);
+	void WriteReducebleFile(std::string reduceble_file_name,
+		std::vector<std::vector<std::string>> sorted_and_grouped_tokens);
 };
 #endif

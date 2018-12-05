@@ -4,8 +4,8 @@
 
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
-#include <iostream>
-#include <windows.h>
+#include <iostream> // std::cout for debugging 
+#include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
 // as a function pointer passed to map function to exporting data
 void exportingMedianFile(
@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
 	FileMgt file_mgt_instance;
 	// create median file name list
 	std::vector<std::string> median_file_name_list =
-		file_mgt_instance.createMedianFile(mapper_process_id,r_count,
+		file_mgt_instance.createMedianFiles(mapper_process_id,r_count,
 			median_path);
 	for (auto it = input_file_list.begin();//map each file in loop 
 			it != input_file_list.end();++it) {
@@ -76,7 +76,7 @@ int main(int argc, char * argv[]) {
 	}
 	FreeLibrary(h_mod_map);
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
-		<< mapper_process_id << " ended";
+		<< mapper_process_id << " ended\n";
 	return 0;
 }
 

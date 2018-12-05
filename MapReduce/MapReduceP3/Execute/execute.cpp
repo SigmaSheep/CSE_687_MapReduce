@@ -38,8 +38,8 @@ int main() {
 
 	//std::cout << "type input directory\n";
 	//std::cin >> input_path;
-	input_path = "C:/Users/Xin/Desktop/test/shakespeare/shakespeare";
-
+	//input_path = "C:/Users/Xin/Desktop/test/shakespeare/shakespeare";
+	input_path = "C:/Users/Xin/Desktop/test/shakespeare";
 	//std::cout << "type intermediate directory\n";
 	//std::cin >> media_path;
 	media_path = "C:/Users/Xin/Desktop/test/median";
