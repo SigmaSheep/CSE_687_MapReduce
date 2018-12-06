@@ -145,25 +145,3 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 	divided_file_list.push_back(path_for_one_mapper);
 	return divided_file_list;
 }
-
-void FileMgt::WriteReducebleFile(std::string reduceble_file_name,
-	std::vector<std::vector<std::string>> sorted_and_grouped_tokens) {
-	// reduceble_file_name should be an empty file 
-	// because CreateRe..Files always clear it
-	std::ofstream outfile(reduceble_file_name);
-	if (!outfile.is_open()) {
-		BOOST_LOG_TRIVIAL(error)<<"Reduceble_file is failed to open:"
-			<< std::string(52, ' ') << reduceble_file_name << "\n";
-		std::exit(EXIT_FAILURE);
-	} else {
-		for (auto it = sorted_and_grouped_tokens.begin(); 
-			it != sorted_and_grouped_tokens.end(); ++it) {
-			std::vector<std::string> inside_vector = *it;
-			for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
-				outfile << *it << " ";
-			}
-			outfile << "\n";
-		}
-	}
-	outfile.close();
-}

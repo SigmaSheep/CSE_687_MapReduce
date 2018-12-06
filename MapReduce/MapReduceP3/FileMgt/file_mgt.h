@@ -46,7 +46,5 @@ public:
 		int reducer_id, int r_count, std::string media_path);
 	std::vector<std::string> AllocateInputFiles(
 		int count, const std::vector<std::string> input_file_list);
-	void WriteReducebleFile(std::string reduceble_file_name,
-		std::vector<std::vector<std::string>> sorted_and_grouped_tokens);
 };
 #endif

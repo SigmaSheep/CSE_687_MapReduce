@@ -1,6 +1,8 @@
 //12_04_2018 created
+//12_06_2018 move sort and group here from work flow
 #include "../FileMgt/file_mgt.h"
 #include "../ReduceInterface/reduce_interface.h"
+#include "../Sort/sort.h" // Sort sort_instance.sortAndGroup()
 
 #include <boost/algorithm/string/classification.hpp> // boost::for is_any_of
 #include <boost/algorithm/string/split.hpp> // boost::split
@@ -15,11 +17,11 @@ void exportingOutputFile(
 	std::string out_file_name);
 
 int main(int argc, char* argv[]) {
-	// recieve parameters: process_id, reduce_dll_path, 
-	//  number of reducer, output_path, reduceble_file_list 
-	if (argc < 3) {
+	// SECTION 1: recieve parameters:
+	// process_id, reduce_dll_path,number of reducer, output_path, media_path 
+	if (argc < 5) {
 		BOOST_LOG_TRIVIAL(error) <<
-			"Less arguments recieved in mapper process\n";
+			"Less arguments recieved in reducer process\n";
 		std::exit(EXIT_FAILURE);
 	}
 	int reducer_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
@@ -28,16 +30,30 @@ int main(int argc, char* argv[]) {
 	std::string reduce_dll_path = argv[1];
 	int r_count = boost::lexical_cast<int>(argv[2]);//cast to int
 	std::string out_path = argv[3];
-	std::string reduceble_file = argv[4];
+	std::string media_path = argv[4];
 
-	//load dll
+	// SECTION 2: sort and group data from median files 
+	FileMgt file_mgt_instance;
+	std::vector<std::string> reduceble_median_file_list =
+		file_mgt_instance.CreateReducebleFiles(r_count, media_path);
+	Sort sort_instance;
+	std::vector<std::pair<std::string, std::string>> sortable_tokens;
+	std::vector<std::vector<std::string>> sorted_and_grouped_tokens;
+	//read median files to sortable_tokens
+	sortable_tokens = file_mgt_instance.ReadMediateFiles(
+		reducer_process_id, r_count, media_path);
+	//sort sortable_tokens based on key(pair.first)
+	//group values with same key
+	sorted_and_grouped_tokens =
+		sort_instance.sortAndGroup(sortable_tokens);
+
+	//  SECTION 3: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
 	HMODULE h_mod_reduce = LoadLibrary(reduce_dll_path.c_str());
 	if (h_mod_reduce == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "Load reduce library failed\n";
 		std::exit(EXIT_FAILURE);
 	}
-		
 	ReduceHolder rCtor = (ReduceHolder)GetProcAddress(h_mod_reduce,
 		"createReduceIns");
 	if (rCtor == nullptr) {
@@ -45,37 +61,12 @@ int main(int argc, char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 	ReduceInterface* reduce_pointer = rCtor();
-	FileMgt file_mgt_instance;
-	// create final result file
+
+	// SECTION 4: create final result file and call reducer function
 	std::string result_file_name  =
 		file_mgt_instance.createOutputFile(reducer_process_id,
 			out_path);
-	
-	std::vector<std::vector<std::string>> sorted_and_grouped_tokens;
-	std::vector<std::string> single_key_and_values;
-	std::ifstream infile(reduceble_file); // open reduceble file
-	std::string input_line; 
-	std::string delimiter = " ";
-	if (infile.is_open()) { 
-		BOOST_LOG_TRIVIAL(info) <<"Reducer #"<< reducer_process_id 
-			<< " is reducing reduceble file: \n" << std::string(52, ' ') 
-			<< reduceble_file <<"\n";
-		while (std::getline(infile, input_line)) {// read line
-			boost::split(single_key_and_values, input_line,
-				boost::is_any_of(delimiter), boost::token_compress_on);
-			single_key_and_values.pop_back();//last one is space
-			sorted_and_grouped_tokens.push_back(single_key_and_values);
-			single_key_and_values.clear();
-		}
-	} else {
-	BOOST_LOG_TRIVIAL(error)
-			<< "Open below input file failed\n"
-			<< std::string(52, ' ')
-			<< reduceble_file << "\n";
-		std::exit(EXIT_FAILURE);
-	}
-	infile.close();
-	
+	// call reduce function
 	reduce_pointer->ReduceFunction(sorted_and_grouped_tokens,
 		exportingOutputFile, result_file_name);//call MapFunction from Dll
 	FreeLibrary(h_mod_reduce);
