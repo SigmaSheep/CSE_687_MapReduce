@@ -31,14 +31,15 @@ Maintenance History:
 
 class Map_DLL MapClass : public MapInterface {
 public:
-	virtual void MapFunction(const std::string line,
-		void(*exporting)(std::vector<std::pair<std::string, std::string>>,
-			std::string),
-		std::string median_file_name);
+	virtual void MapFunction(const std::string line, //first arg
+		void(*exporting)(std::vector<std::pair
+			<std::string, std::string>>,//2nd arg
+			std::vector<std::string>),
+		std::vector<std::string> median_file_list);//3rd arg
 private:
 	std::string map_value = "1";
-	std::vector<std::pair<std::string, std::string>> Tokenizer(std::string line,
-		std::string map_value);
+	std::vector<std::pair<std::string, std::string>> Tokenizer(
+		std::string line, std::string map_value);
 	bool ValidChar(const char c) { return (c < -1 || c>255) ? false : true; };
 };
 
@@ -47,12 +48,12 @@ extern "C" Map_DLL MapInterface* createMapIns() { return new MapClass(); }
 // tokenize the line of string into words, and call exporting function to export data.
 void MapClass::MapFunction(const std::string line,
 	void(*exporting)(std::vector<std::pair<std::string, std::string>>,
-		std::string),
-	std::string median_file_name) {
+		std::vector<std::string>),
+	std::vector<std::string> median_file_list) {
 	if (line.size() != 0) {
 		std::vector<std::pair<std::string, std::string>> tokenized_vector =
 			Tokenizer(line, map_value);
-		exporting(tokenized_vector, median_file_name);
+		exporting(tokenized_vector, median_file_list);
 	}
 }
 // called by MapFunction as tokenizer

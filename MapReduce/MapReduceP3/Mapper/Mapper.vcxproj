@@ -71,6 +71,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\Debug</OutDir>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\my_soft\office_ware\boost_1_68_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\my_soft\office_ware\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -118,6 +121,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="mapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
+      <Project>{de570a0c-c8fd-4571-b874-0c61bdc95ee8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

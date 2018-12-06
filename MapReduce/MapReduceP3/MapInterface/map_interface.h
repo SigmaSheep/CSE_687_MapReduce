@@ -37,9 +37,13 @@ class MapInterface {
 public:
 	MapInterface() {};
 	~MapInterface() {};
-	virtual void MapFunction(const std::string line,
-		void(*exporting)(
-			std::vector<std::pair<std::string, std::string>>, std::string),
-		std::string median_file_name) {};
+	// Map function
+	// arguments: line of string, exporting function ptr, 
+	//            median file list
+	virtual void MapFunction(
+		const std::string line,//first arg
+		void(*exporting)(std::vector<std::pair<std::string, std::string>>,
+			std::vector<std::string>),//second
+		std::vector<std::string> median_file_list) {};//thrid
 };
 #endif

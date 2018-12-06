@@ -24,11 +24,20 @@ void FileMgt::printvector(const std::vector<std::string> input_vector) {
 	}
 }
 
-// create median file and clear file if already exists
-std::string FileMgt::createMedianFile(const std::string media_path) {
-	std::string media_file_name = media_path + std::string("\\intermediate.txt");
-	std::ofstream file(media_file_name, std::ios::out); // create& clear a file
-	return media_file_name;
+// create multiple median files and clear file if already exists
+std::vector<std::string> FileMgt::createMedianFile(int proc_id, int r_count, 
+	const std::string media_path) {
+	std::vector<std::string > median_file_list;
+	for (int i = 0; i < r_count; i++) {
+		std::string media_file_name = media_path + 
+			std::string("\\intermediate") +std::to_string(proc_id)
+			+"_" +std::to_string(i) +std::string(".txt");
+		median_file_list.push_back(media_file_name);
+		// create& clear a file
+		std::ofstream file(media_file_name, std::ios::out);
+	}
+	
+	return median_file_list;
 };
 
 // create output file and clear a file if already exists
