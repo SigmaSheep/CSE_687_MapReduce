@@ -86,3 +86,31 @@ void FileMgt::printVectorVector(
 		std::cout << "\n";
 	}
 };
+
+// divide input files to m parts according to how many map processes
+// also make string ready for CreateProcess argument type like "path1 path2 ...pathn" 
+std::vector<std::string> FileMgt::AllocateInputFiles(
+	int count, const std::vector<std::string> input_file_list) {
+	std::vector<std::string> divided_file_list;
+	auto elements_per_part = input_file_list.size() / count;
+	for (int i = 0; i < (count-1); i++) {
+		auto start_po = input_file_list.begin() + (i * elements_per_part);
+		auto end_po = input_file_list.begin() + ((i + 1) * elements_per_part);
+		std::string path_for_one_mapper;
+		for (auto it = start_po; it != end_po; ++it) {
+			path_for_one_mapper.append(*it);
+			path_for_one_mapper.append(" ");
+		}
+		divided_file_list.push_back(path_for_one_mapper);
+	}
+	auto start_po = input_file_list.begin() + ((count - 1) * elements_per_part);
+	std::string path_for_one_mapper;
+	for (auto it = start_po; it != input_file_list.end(); ++it) {
+		path_for_one_mapper.append(*it);
+		path_for_one_mapper.append(" ");
+	}
+	divided_file_list.push_back(path_for_one_mapper);
+
+	return divided_file_list;
+}
+

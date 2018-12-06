@@ -1,16 +1,15 @@
 #include "pch.h"
 
 #include "../FileMgt/file_mgt.h"
-#include "../FileMgt/file_mgt.cpp"
 #include "../MapInterface/map_interface.h"
 #include "../ReduceInterface/reduce_interface.h"
 #include "../Sort/sort.h"
-#include "../Sort/sort.cpp"
 #include <fstream>
 #include <vector>
 #include <string>
 #include <tchar.h>
 #include <Windows.h>
+
 
 void exportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
@@ -81,7 +80,7 @@ TEST_F(testallclass, testFileMgt_FileIter) {
 	std::vector<std::string> file_list;
 	FileMgt file_management_class_test;
 	file_list = file_management_class_test.fileIter(input_path);
-	int len = file_list[0].length();
+	auto len = file_list[0].length();
 	EXPECT_EQ("ifls.txt", file_list[0].substr(len - 8, len));
 }
 
@@ -160,11 +159,37 @@ TEST_F(testallclass, testReduce_reduceFunction) {
 	read_out_file.close();
 }
 
+TEST_F(testallclass, testFileMgtPartitionFunction) {
+	std::ofstream f1("./input2/f1.txt", std::ios::out);
+	std::ofstream f2("./input2/f2.txt", std::ios::out);
+	std::ofstream f3("./input2/f3.txt", std::ios::out);
+	std::ofstream f4("./input2/f4.txt", std::ios::out);
+	std::ofstream f5("./input2/f5.txt", std::ios::out);
+	std::ofstream f6("./input2/f6.txt", std::ios::out);
+	std::ofstream f7("./input2/f7.txt", std::ios::out);
+	f1.close();
+	f2.close();
+	f3.close();
+	f4.close();
+	f5.close();
+	f6.close();
+	f7.close();
+	FileMgt file_management_class_test;
+	std::vector<std::string> file_list = 
+		file_management_class_test.fileIter("./input2");
+	std::vector<std::string> partioned_list =
+		file_management_class_test.AllocateInputFiles(3,file_list);
+
+	auto len = partioned_list[0].length();
+	EXPECT_EQ("./input2\\f1.txt ./input2\\f2.txt ", partioned_list[0]);
+	EXPECT_EQ("./input2\\f3.txt ./input2\\f4.txt ", partioned_list[1]);
+	EXPECT_EQ("./input2\\f5.txt ./input2\\f6.txt ./input2\\f7.txt ", partioned_list[2]);
+}
+
 int main(int argc, char* argv[]) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
-
 
 void exportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,

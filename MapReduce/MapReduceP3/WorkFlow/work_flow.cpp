@@ -13,8 +13,9 @@ void exportingOutputFile(
 // WorkFlow handles all working logics
 WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	const std::string out_path, const std::string map_dll_path,
-	const std::string reduce_dll_path) {
-
+	const std::string reduce_dll_path, int m_count, int r_count) {
+	   	  
+	/*
 	// MapHolder and ReduceHolder holding a map or reduce instance
 	typedef MapInterface*(CALLBACK* MapHolder)();
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
@@ -47,10 +48,52 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	ReduceInterface* reduce_pointer = rCtor();
 
 	BOOST_LOG_TRIVIAL(info) << "Loading Dll sucussful\n";
+	*/
+
 	// put input files' paths into vector input_file_list
 	FileMgt file_mgt_instance;
 	std::vector<std::string> input_file_list =
 		file_mgt_instance.fileIter(input_path);
+	// divide input files based on the map count
+	std::vector<std::string> divided_file_list = 
+		file_mgt_instance.AllocateInputFiles(m_count, input_file_list);
+	//file_mgt_instance.printvector(divided_file_list);
+
+	STARTUPINFO start_info; // establishes properties of child process
+	GetStartupInfo(&start_info);
+	LPSTARTUPINFO process_start_info = &start_info; // set process style
+	LPCTSTR app_name = "../Mapper/Debug/Mapper.exe"; // program to run
+	std::vector<PROCESS_INFORMATION> process_info_list; // process info list
+	std::vector<bool> status_list; // hold creation fail
+
+	for (int i = 0; i < m_count; i++) {
+		PROCESS_INFORMATION tmp_process_info;
+		LPPROCESS_INFORMATION procee_retrive_infor = &tmp_process_info;
+		LPTSTR  command_line = (char *)divided_file_list[i].c_str();    // main's args
+
+		BOOL process_status = CreateProcess(app_name, command_line, NULL, NULL, FALSE,
+			NULL, NULL, NULL, process_start_info, procee_retrive_infor);
+		CloseHandle(tmp_process_info.hThread);  // parent needs no access to child thread
+		process_info_list.push_back(tmp_process_info);
+		status_list.push_back(process_status);
+	}
+	// check all status
+	int process_count = 0;
+	for (auto it = status_list.begin(); it != status_list.end(); ++it) {
+		if (!*it) {
+			BOOST_LOG_TRIVIAL(error) << "Map process "<<
+				process_count<<"failed to create\n";
+		}
+		process_count++;
+	}
+	// wait process to finish
+	for (auto it = process_info_list.begin(); it != process_info_list.end(); ++it) {
+		PROCESS_INFORMATION tmp = *it;
+		WaitForSingleObject(tmp.hProcess, INFINITE);
+		CloseHandle(tmp.hProcess);
+	}
+	
+	/*
 	// median_file_name is median_path/intermedia.txt
 	std::string median_file_name =
 		file_mgt_instance.createMedianFile(media_path);
@@ -102,6 +145,8 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 
 	FreeLibrary(h_mod_map);
 	FreeLibrary(h_mod_reduce);
+	BOOST_LOG_TRIVIAL(info) << " Work finished\n";
+	*/
 }
 //////////////////////////////////////////////////////////////////////////////////
 // void exportingMedianFile(

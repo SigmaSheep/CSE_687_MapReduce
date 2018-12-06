@@ -44,5 +44,7 @@ public:
 	std::string createOutputFile(const std::string out_path);
 	std::vector<std::pair<std::string, std::string>> readList(
 		const std::vector<std::string> meidan_file_list);
+	std::vector<std::string> AllocateInputFiles(
+		int count, const std::vector<std::string> input_file_list);
 };
 #endif
