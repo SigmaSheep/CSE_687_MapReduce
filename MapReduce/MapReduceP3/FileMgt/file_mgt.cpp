@@ -116,7 +116,9 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 		auto end_position = input_file_list.begin() + ((i + 1) * elements_per_part);
 		std::string path_for_one_mapper;
 		for (auto it = start_position; it != end_position; ++it) {
+			path_for_one_mapper.append("\""); // in case file name has space
 			path_for_one_mapper.append(*it);
+			path_for_one_mapper.append("\"");
 			path_for_one_mapper.append(" ");
 		}
 		divided_file_list.push_back(path_for_one_mapper);
@@ -124,7 +126,9 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 	auto start_position = input_file_list.begin() + ((count - 1) * elements_per_part);
 	std::string path_for_one_mapper;
 	for (auto it = start_position; it != input_file_list.end(); ++it) {
+		path_for_one_mapper.append("\""); // in case file name has space
 		path_for_one_mapper.append(*it);
+		path_for_one_mapper.append("\"");
 		path_for_one_mapper.append(" ");
 	}
 	divided_file_list.push_back(path_for_one_mapper);

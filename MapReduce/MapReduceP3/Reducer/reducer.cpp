@@ -125,8 +125,7 @@ void exportingOutputFile(
 			}
 			outfile << std::endl;
 		}
-	}
-	else {
+	} else {
 		BOOST_LOG_TRIVIAL(error) << "Open output files failed\n";
 		std::exit(EXIT_FAILURE);
 	}
