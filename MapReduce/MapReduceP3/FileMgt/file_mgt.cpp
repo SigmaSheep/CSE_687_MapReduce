@@ -140,3 +140,12 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 	divided_file_list.push_back(path_for_one_mapper);
 	return divided_file_list;
 }
+
+void FileMgt::ClearDirectory(std::string path) { 
+	namespace fs = boost::filesystem;
+	fs::path path_to_remove(path);
+	for (fs::directory_iterator end_dir_it, it(path_to_remove); it != end_dir_it;
+       ++it) {
+    fs::remove_all(it->path());
+	}
+}

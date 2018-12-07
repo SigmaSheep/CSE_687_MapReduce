@@ -17,6 +17,7 @@ Maintenance History:
 ===============
 11_16_2018 first release
 11_06_2018 check if path exist in fileIter
+           add clear directory
 */
 //
 
@@ -33,6 +34,7 @@ public:
 	FileMgt() {};
 	~FileMgt() {};
 
+	void ClearDirectory(std::string path);
 	std::vector<std::string> fileIter(const std::string path_p);
 	void printvector(const std::vector<std::string> input_vector);
 	void printPairVector(const std::vector<std::pair<std::string,

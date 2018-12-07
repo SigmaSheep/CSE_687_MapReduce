@@ -12,6 +12,8 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 		file_mgt_instance.fileIter(input_path);
     file_mgt_instance.fileIter(media_path);//just check if exist
     file_mgt_instance.fileIter(out_path);//just check if exist
+    file_mgt_instance.ClearDirectory(media_path);//clear median_path
+    file_mgt_instance.ClearDirectory(out_path); // clear out_path
 	// divide input files based on the map count
 	std::vector<std::string> divided_file_list =
 		file_mgt_instance.AllocateInputFiles(m_count, input_file_list);
