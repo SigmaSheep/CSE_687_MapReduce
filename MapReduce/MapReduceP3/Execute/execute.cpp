@@ -30,17 +30,17 @@ int main() {
 
 	//std::cout << "type number of mapper \n";
 	//std::cin >> m_count;
-	m_count = 5;
+	m_count = 2;
 
 	//std::cout << "type number of reducer \n";
 	//std::cin >> r_count;
-	r_count = 5;
+	r_count = 2;
 
 	//std::cout << "type input directory\n";
 	//std::cin >> input_path;
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare/shakespeare";
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare";
-	input_path = "C:/Users/Xin-PC/Desktop/test/input";
+	input_path = "C:/Users/Xin-PC/Desktop/test/shakespeare";
 
 	//std::cout << "type intermediate directory\n";
 	//std::cin >> media_path;

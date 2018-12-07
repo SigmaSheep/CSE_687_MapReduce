@@ -40,7 +40,6 @@ public:
 		const std::vector<std::vector<std::string>> input_vector);
 	std::vector<std::string> createMedianFiles(int proc_id,
 		int r_count, const std::string media_path);
-	std::vector<std::string> CreateReducebleFiles(int r_count, std::string media_path);
 	std::string createOutputFile(int reducer_id, const std::string out_path);
 	std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
 		int reducer_id, int r_count, std::string media_path);

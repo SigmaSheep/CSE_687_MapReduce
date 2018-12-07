@@ -5,6 +5,8 @@
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
 #include <iostream> // std::cout for debugging 
+#include <mutex>  // std::mutex
+#include <thread> // std::thread
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
 // as a function pointer passed to map function to exporting data
@@ -12,10 +14,17 @@ void exportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::vector<std::string> median_file_list);
 
+// as thread function
+void MapThreadFunction(int thread_id, int mapper_process_id, 
+	std::string map_dll_path, int r_count, std::string median_path,
+	MapInterface* map_pointer,
+	std::vector<std::string>::const_iterator start_median_file,
+	std::vector<std::string>::const_iterator end_median_file);
+
 int main(int argc, char * argv[]) {
 	// recieve parameters: mapper proc #id, dll_path, number of reducer,
 	//					   median_file_path, input_file_paths(multiple)
-	if (argc < 3) {
+	if (argc < 4) {
 		BOOST_LOG_TRIVIAL(error) << 
 			"Less arguments recieved in mapper process\n";
 		std::exit(EXIT_FAILURE);
@@ -45,35 +54,26 @@ int main(int argc, char * argv[]) {
 	}
 	MapInterface* map_pointer = mCtor();
 
-	FileMgt file_mgt_instance;
-	// create median file name list
-	std::vector<std::string> median_file_name_list =
-		file_mgt_instance.createMedianFiles(mapper_process_id,r_count,
-			median_path);
-	for (auto it = input_file_list.begin();//map each file in loop 
-			it != input_file_list.end();++it) {
-		std::string input_file = *it;
-		int len = input_file.size();
-		std::ifstream infile(*it); // open each input file
-		std::string input_line; 
-		if (infile.is_open()) { 
-			BOOST_LOG_TRIVIAL(info) <<"Mapper #"<< mapper_process_id 
-				<< " is mapping input file: \n" << std::string(52, ' ') 
-				<< *it<<"\n";
-			while (std::getline(infile, input_line)) {// read line
-				map_pointer->MapFunction(input_line,
-					&exportingMedianFile,
-					median_file_name_list);//call MapFunction from Dll
-			}
-		} else {
-			BOOST_LOG_TRIVIAL(error)
-				<< "Open below input file failed\n"
-				<< std::string(52, ' ')
-				<< *it << "\n";
-			std::exit(EXIT_FAILURE);
-		}
-		infile.close();
-	}
+	// divide median files based on thread number
+	// now 2 threads
+	int median_file_count = input_file_list.size();
+	std::vector<std::string>::const_iterator start_input_file =
+		input_file_list.begin();
+	std::vector<std::string>::const_iterator end_input_file =
+		start_input_file + median_file_count / 2;
+	// start thread #1
+	std::thread t1(MapThreadFunction, 0,mapper_process_id, map_dll_path,
+		r_count, median_path, map_pointer, start_input_file,
+		end_input_file);
+	start_input_file = end_input_file;
+	end_input_file = input_file_list.end();
+	// start thread #2
+	std::thread t2(MapThreadFunction, 1,mapper_process_id, map_dll_path,
+		r_count, median_path, map_pointer, start_input_file,
+		end_input_file);
+	t1.join();
+	t2.join();
+
 	FreeLibrary(h_mod_map);
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id << " ended\n";
@@ -116,5 +116,53 @@ void exportingMedianFile(
 	}
 	delete[] outfiles;//delete in heap
 };
+//////////////////////////////////////////////////////////////////////////////////
+//void MapThreadFunction(int thread_id, int mapper_process_id,
+//		std::string map_dll_path,
+//		int r_count, std::string median_path, MapInterface* map_pointer,
+//		std::vector<std::string>::const_iterator start_input_file,
+//		std::vector<std::string>::const_iterator end_input_file)
+// run as map thread function
+/////////////////////////////////////////////////////////////////////////////////
+void MapThreadFunction(int thread_id, int mapper_process_id, 
+	std::string map_dll_path,
+	int r_count, std::string median_path, MapInterface* map_pointer,
+	std::vector<std::string>::const_iterator start_input_file,
+	std::vector<std::string>::const_iterator end_input_file) {
 
-
+	static std::mutex mtx; // lock
+	std::vector<std::string> input_file_list(
+		start_input_file, end_input_file);
+	FileMgt file_mgt_instance;
+	// create median file name list
+	std::vector<std::string> median_file_name_list =
+		file_mgt_instance.createMedianFiles(mapper_process_id, r_count,
+			median_path);
+	for (auto it = input_file_list.begin();//map each file in loop 
+		it != input_file_list.end(); ++it) {
+		std::string input_file = *it;
+		int len = input_file.size();
+		std::ifstream infile(*it); // open each input file
+		std::string input_line;
+		if (infile.is_open()) {
+			BOOST_LOG_TRIVIAL(info) << "Mapper #" << mapper_process_id
+				<<" thread #"<< thread_id
+				<< " is mapping input file: \n" << std::string(52, ' ')
+				<< *it << "\n";
+			while (std::getline(infile, input_line)) {// read line
+				std::vector<std::pair<std::string, std::string>> key_values =
+					map_pointer->MapFunction(input_line);//call MapFunction from Dll
+				mtx.lock(); // lock before exporting
+				exportingMedianFile(key_values, median_file_name_list);
+				mtx.unlock();
+			}
+		} else {
+			BOOST_LOG_TRIVIAL(error)
+				<< "Open below input file failed\n"
+				<< std::string(52, ' ')
+				<< *it << "\n";
+			std::exit(EXIT_FAILURE);
+		}
+		infile.close();
+	}
+};

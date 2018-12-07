@@ -16,6 +16,7 @@ MapInterface.h
 Maintenance History:
 ===============
 11_16_2018 first release
+12_06_2018 give exporting back to framework
 */
 //
 #include "../MapInterface/map_interface.h"
@@ -31,11 +32,8 @@ Maintenance History:
 
 class Map_DLL MapClass : public MapInterface {
 public:
-	virtual void MapFunction(const std::string line, //first arg
-		void(*exporting)(std::vector<std::pair
-			<std::string, std::string>>,//2nd arg
-			std::vector<std::string>),
-		std::vector<std::string> median_file_list);//3rd arg
+	virtual std::vector<std::pair<std::string, std::string>> MapFunction(
+		const std::string line);
 private:
 	std::string map_value = "1";
 	std::vector<std::pair<std::string, std::string>> Tokenizer(
@@ -46,15 +44,13 @@ private:
 extern "C" Map_DLL MapInterface* createMapIns() { return new MapClass(); }
 
 // tokenize the line of string into words, and call exporting function to export data.
-void MapClass::MapFunction(const std::string line,
-	void(*exporting)(std::vector<std::pair<std::string, std::string>>,
-		std::vector<std::string>),
-	std::vector<std::string> median_file_list) {
+std::vector<std::pair<std::string, std::string>> MapClass::MapFunction(
+	const std::string line) {
+	std::vector<std::pair<std::string, std::string>> tokenized_vector;
 	if (line.size() != 0) {
-		std::vector<std::pair<std::string, std::string>> tokenized_vector =
-			Tokenizer(line, map_value);
-		exporting(tokenized_vector, median_file_list);
+		tokenized_vector = Tokenizer(line, map_value);
 	}
+	return tokenized_vector;
 }
 // called by MapFunction as tokenizer
 std::vector<std::pair<std::string, std::string>>

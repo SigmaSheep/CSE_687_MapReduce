@@ -39,21 +39,6 @@ std::vector<std::string> FileMgt::createMedianFiles(int proc_id, int r_count,
 	return median_file_list;
 };
 
-// create files ready for reduce
-std::vector<std::string> FileMgt::CreateReducebleFiles(int r_count,
-	std::string media_path) {
-	std::vector<std::string> reduceble_file_name_list;
-	for (int i = 0; i < r_count; i++) {
-		std::string reduceble_file_name = 
-			media_path + std::string("/reduceble")+std::to_string(i)
-			+std::string(".txt");
-		std::ofstream file(reduceble_file_name,
-			std::ios::out); // create& clear a file
-		reduceble_file_name_list.push_back(reduceble_file_name);
-	}
-	return reduceble_file_name_list;
-};
-
 // create output file and clear a file if already exists
 std::string FileMgt::createOutputFile(int reducer_id, 
 	const std::string out_path) {

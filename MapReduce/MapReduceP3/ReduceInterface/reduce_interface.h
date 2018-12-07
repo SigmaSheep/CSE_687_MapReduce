@@ -29,6 +29,7 @@ none
 Maintenance History:
 ===============
 11_16_2018 first release
+12_06_2018 give exporting back to framework
 */
 //
 #include <string>
@@ -38,9 +39,10 @@ class ReduceInterface {
 public:
 	ReduceInterface() {};
 	~ReduceInterface() {};
-	virtual void ReduceFunction(
-		const std::vector<std::vector<std::string>> input_vector,
-		void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
-		const std::string out_file_name) {};
+	virtual  std::vector<std::vector<std::string>> ReduceFunction(
+		const std::vector<std::vector<std::string>> input_vector) {
+		std::vector<std::vector<std::string>> result;
+		return result;
+	};
 };
 #endif

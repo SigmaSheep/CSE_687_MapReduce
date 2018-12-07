@@ -1,5 +1,6 @@
 //12_04_2018 created
 //12_06_2018 move sort and group here from work flow
+//           add multi-threads
 #include "../FileMgt/file_mgt.h"
 #include "../ReduceInterface/reduce_interface.h"
 #include "../Sort/sort.h" // Sort sort_instance.sortAndGroup()
@@ -9,12 +10,29 @@
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
 #include <iostream> // std::cout for debugging 
+#include <mutex> // std::mutex
+#include <thread>
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
-// as a function pointer passed to reduce function to exporting data
+// as a globle function to export data
 void exportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name);
+
+// thread function for multi-thread reducing
+void ReduceThreadFunc(ReduceInterface* reduce_pointer,
+	std::vector<std::vector<std::string>>::const_iterator begin_positon,
+	std::vector<std::vector<std::string>>::const_iterator end_position,
+	std::string result_file_name) {
+	static std::mutex mtx;//lock
+	std::vector<std::vector<std::string>> sorted_and_grouped_tokens(
+		begin_positon, end_position);
+	std::vector<std::vector<std::string>> final_result = //call from Dll
+		reduce_pointer->ReduceFunction(sorted_and_grouped_tokens);
+	mtx.lock();
+	exportingOutputFile(final_result, result_file_name);
+	mtx.unlock();
+};
 
 int main(int argc, char* argv[]) {
 	// SECTION 1: recieve parameters:
@@ -34,18 +52,14 @@ int main(int argc, char* argv[]) {
 
 	// SECTION 2: sort and group data from median files 
 	FileMgt file_mgt_instance;
-	std::vector<std::string> reduceble_median_file_list =
-		file_mgt_instance.CreateReducebleFiles(r_count, media_path);
-	Sort sort_instance;
-	std::vector<std::pair<std::string, std::string>> sortable_tokens;
-	std::vector<std::vector<std::string>> sorted_and_grouped_tokens;
 	//read median files to sortable_tokens
-	sortable_tokens = file_mgt_instance.ReadMediateFiles(
-		reducer_process_id, r_count, media_path);
+	 std::vector<std::pair<std::string, std::string>> sortable_tokens =
+		 file_mgt_instance.ReadMediateFiles(reducer_process_id, r_count, media_path);
+	 Sort sort_instance;
 	//sort sortable_tokens based on key(pair.first)
 	//group values with same key
-	sorted_and_grouped_tokens =
-		sort_instance.sortAndGroup(sortable_tokens);
+	std::vector<std::vector<std::string>> sorted_and_grouped_tokens 
+		= sort_instance.sortAndGroup(sortable_tokens);
 
 	//  SECTION 3: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
@@ -62,13 +76,26 @@ int main(int argc, char* argv[]) {
 	}
 	ReduceInterface* reduce_pointer = rCtor();
 
-	// SECTION 4: create final result file and call reducer function
+	// SECTION 4: create final result file and invoke threads
+	//            to call reducer function
 	std::string result_file_name  =
 		file_mgt_instance.createOutputFile(reducer_process_id,
 			out_path);
-	// call reduce function
-	reduce_pointer->ReduceFunction(sorted_and_grouped_tokens,
-		exportingOutputFile, result_file_name);//call MapFunction from Dll
+
+	// start 2 threads
+	int reduceble_vector_size= sorted_and_grouped_tokens.size();
+	std::vector<std::vector<std::string>>::const_iterator begin_position, end_position;
+	begin_position = sorted_and_grouped_tokens.begin();
+	end_position = begin_position + reduceble_vector_size / 2;
+	std::thread t1(ReduceThreadFunc, reduce_pointer,
+		begin_position, end_position, result_file_name);
+	begin_position = end_position;
+	end_position = sorted_and_grouped_tokens.end();
+	std::thread t2(ReduceThreadFunc, reduce_pointer,
+		begin_position, end_position, result_file_name);
+	t1.join();
+	t2.join();
+
 	FreeLibrary(h_mod_reduce);
 	BOOST_LOG_TRIVIAL(info) << "Reducer process #"
 		<< reducer_process_id << " ended\n";
