@@ -83,6 +83,7 @@ TEST_F(testallclass, testFileMgt_FileIter) {
 	auto len = file_list[0].length();
 	EXPECT_EQ("ifls.txt", file_list[0].substr(len - 8, len));
 }
+/*
 
 TEST_F(testallclass, testFileMgt_ReadList) {
 	std::vector<std::string> file_list;
@@ -96,8 +97,8 @@ TEST_F(testallclass, testFileMgt_ReadList) {
 	EXPECT_EQ("c", sortable_tokens[2].first);
 	EXPECT_EQ("a", sortable_tokens[3].first);
 }
-
-
+*/
+/*
 TEST_F(testallclass, testSortClass_sortFunction) {
 	std::vector<std::string> file_list;
 	std::vector<std::pair<std::string, std::string>> sortable_tokens;
@@ -118,7 +119,8 @@ TEST_F(testallclass, testSortClass_sortFunction) {
 	EXPECT_EQ("c", sorted_and_grouped_tokens[2][0]);
 	EXPECT_EQ("1", sorted_and_grouped_tokens[2][1]);
 }
-
+*/
+/*
 TEST_F(testallclass, testReduce_reduceFunction) {
 
 	FileMgt file_management_class;
@@ -158,7 +160,7 @@ TEST_F(testallclass, testReduce_reduceFunction) {
 	}
 	read_out_file.close();
 }
-
+*/
 TEST_F(testallclass, testFileMgtPartitionFunction) {
 	std::ofstream f1("./input2/f1.txt", std::ios::out);
 	std::ofstream f2("./input2/f2.txt", std::ios::out);
