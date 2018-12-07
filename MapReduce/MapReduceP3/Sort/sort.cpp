@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #include "sort.h"
 
-std::vector<std::vector<std::string>> Sort::sortAndGroup(
+std::vector<std::vector<std::string>> Sort::SortAndGroup(
 	const std::vector<std::pair<std::string, std::string>> sortableTokens) {
 
 	std::vector<std::pair<std::string, std::string>> copied_tokens =

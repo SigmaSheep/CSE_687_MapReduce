@@ -40,17 +40,17 @@ int main() {
 	//std::cin >> input_path;
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare/shakespeare";
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare";
-	input_path = "C:/Users/Xin/Desktop/test/input";
+	input_path = "C:/Users/Xin-PC/Desktop/test/input";
 
 	//std::cout << "type intermediate directory\n";
 	//std::cin >> media_path;
 	//media_path = "C:/Users/Xin/Desktop/test/median";
-	media_path = "C:/Users/Xin/Desktop/test/median";
+	media_path = "C:/Users/Xin-PC/Desktop/test/median";
 
 	//std::cout << "type output directory\n";
 	//std::cin >> out_path;
 	//out_path = "C:/Users/Xin/Desktop/test/output";
-	out_path = "C:/Users/Xin/Desktop/test/output";
+	out_path = "C:/Users/Xin-PC/Desktop/test/output";
 
 	map_dll_path_default = "../Debug/MapDll.dll";
 	reduce_dll_path_default = "../Debug/ReduceDll.dll";

@@ -10,7 +10,7 @@
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
 // as a function pointer passed to map function to exporting data
-void exportingMedianFile(
+void ExportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::vector<std::string> median_file_list);
 
@@ -88,7 +88,7 @@ int main(int argc, char * argv[]) {
 //		  median_file_name- path to median file
 // output: void writing tokenized vector into median file
 /////////////////////////////////////////////////////////////////////////////////
-void exportingMedianFile(
+void ExportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::vector<std::string> median_file_list) {
 	size_t r_count = median_file_list.size();
@@ -136,7 +136,7 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	FileMgt file_mgt_instance;
 	// create median file name list
 	std::vector<std::string> median_file_name_list =
-		file_mgt_instance.createMedianFiles(mapper_process_id, r_count,
+		file_mgt_instance.CreateMedianFiles(mapper_process_id, r_count,
 			median_path);
 	for (auto it = input_file_list.begin();//map each file in loop 
 		it != input_file_list.end(); ++it) {
@@ -153,7 +153,7 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 				std::vector<std::pair<std::string, std::string>> key_values =
 					map_pointer->MapFunction(input_line);//call MapFunction from Dll
 				mtx.lock(); // lock before exporting
-				exportingMedianFile(key_values, median_file_name_list);
+				ExportingMedianFile(key_values, median_file_name_list);
 				mtx.unlock();
 			}
 		} else {

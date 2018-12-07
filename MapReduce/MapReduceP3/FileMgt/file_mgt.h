@@ -35,15 +35,15 @@ public:
 	~FileMgt() {};
 
 	void ClearDirectory(std::string path);
-	std::vector<std::string> fileIter(const std::string path_p);
-	void printvector(const std::vector<std::string> input_vector);
-	void printPairVector(const std::vector<std::pair<std::string,
+	std::vector<std::string> FileIter(const std::string path_p);
+	void PrintVector(const std::vector<std::string> input_vector);
+	void PrintPairVector(const std::vector<std::pair<std::string,
 		std::string>> input_vector);
-	void printVectorVector(
+	void PrintVectorVector(
 		const std::vector<std::vector<std::string>> input_vector);
-	std::vector<std::string> createMedianFiles(int proc_id,
+	std::vector<std::string> CreateMedianFiles(int proc_id,
 		int r_count, const std::string media_path);
-	std::string createOutputFile(int reducer_id, const std::string out_path);
+	std::string CreateOutputFile(int reducer_id, const std::string out_path);
 	std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
 		int reducer_id, int r_count, std::string media_path);
 	std::vector<std::string> AllocateInputFiles(

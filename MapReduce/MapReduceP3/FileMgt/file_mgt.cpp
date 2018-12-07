@@ -1,7 +1,7 @@
 #include "file_mgt.h"
 
 // iteration through a directory and return a vector contains file path
-std::vector<std::string> FileMgt::fileIter(const std::string path_p) {
+std::vector<std::string> FileMgt::FileIter(const std::string path_p) {
 	std::vector<std::string> file_list;
 	namespace fs = boost::filesystem;
 	typedef boost::filesystem::recursive_directory_iterator iterator;
@@ -23,15 +23,38 @@ std::vector<std::string> FileMgt::fileIter(const std::string path_p) {
 }
 
 // print out vector of string for debuging
-void FileMgt::printvector(const std::vector<std::string> input_vector) {
+void FileMgt::PrintVector(const std::vector<std::string> input_vector) {
 	for (std::vector<std::string>::const_iterator it = input_vector.begin();
 		it != input_vector.end(); ++it) {
 		std::cout << *it << std::endl;
 	}
 }
 
+// print out a vector of pairs for debuging
+void FileMgt::PrintPairVector(
+    const std::vector<std::pair<std::string, std::string>> input_vector) {
+  std::pair<std::string, std::string> key_and_value;
+  for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
+    key_and_value = *it;
+    std::cout << key_and_value.first << " " << key_and_value.second
+              << std::endl;
+  }
+};
+
+// print out a vector of vector for debuging
+void FileMgt::PrintVectorVector(
+    const std::vector<std::vector<std::string>> input_vector) {
+  for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
+    std::vector<std::string> inside_vector = *it;
+    for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
+      std::cout << *it << " ";
+    }
+    std::cout << "\n";
+  }
+};
+
 // create multiple median files and clear file if already exists
-std::vector<std::string> FileMgt::createMedianFiles(int proc_id, int r_count,
+std::vector<std::string> FileMgt::CreateMedianFiles(int proc_id, int r_count,
 	const std::string media_path) {
 	std::vector<std::string > median_file_list;
 	for (int i = 0; i < r_count; i++) {
@@ -46,7 +69,7 @@ std::vector<std::string> FileMgt::createMedianFiles(int proc_id, int r_count,
 };
 
 // create output file and clear a file if already exists
-std::string FileMgt::createOutputFile(int reducer_id, 
+std::string FileMgt::CreateOutputFile(int reducer_id, 
 	const std::string out_path) {
 	std::string output_file_name = out_path + std::string("/final_result")
 		+ std::to_string(reducer_id) +std::string(".txt");
@@ -89,27 +112,6 @@ std::vector<std::pair<std::string, std::string>> FileMgt::ReadMediateFiles(
 	return sortable_token_list;
 }
 
-// print out a vector of pairs for debuging
-void FileMgt::printPairVector(const std::vector<std::pair<std::string,
-	std::string>> input_vector) {
-	std::pair<std::string, std::string> key_and_value;
-	for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
-		key_and_value = *it;
-		std::cout << key_and_value.first << " " << key_and_value.second << std::endl;
-	}
-};
-
-// print out a vector of vector for debuging
-void FileMgt::printVectorVector(
-	const std::vector<std::vector<std::string>> input_vector) {
-	for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
-		std::vector<std::string> inside_vector = *it;
-		for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
-			std::cout << *it << " ";
-		}
-		std::cout << "\n";
-	}
-};
 
 // divide input files to m parts according to how many map processes
 // also make string ready for CreateProcess argument type like "path1 path2 ...pathn" 

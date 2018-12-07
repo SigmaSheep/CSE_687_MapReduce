@@ -15,7 +15,7 @@
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
 // as a globle function to export data
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name);
 
@@ -30,7 +30,7 @@ void ReduceThreadFunc(ReduceInterface* reduce_pointer,
 	std::vector<std::vector<std::string>> final_result = //call from Dll
 		reduce_pointer->ReduceFunction(sorted_and_grouped_tokens);
 	mtx.lock();
-	exportingOutputFile(final_result, result_file_name);
+	ExportingOutputFile(final_result, result_file_name);
 	mtx.unlock();
 };
 
@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 	//sort sortable_tokens based on key(pair.first)
 	//group values with same key
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens 
-		= sort_instance.sortAndGroup(sortable_tokens);
+		= sort_instance.SortAndGroup(sortable_tokens);
 
 	//  SECTION 3: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
 	// SECTION 4: create final result file and invoke threads
 	//            to call reducer function
 	std::string result_file_name  =
-		file_mgt_instance.createOutputFile(reducer_process_id,
+		file_mgt_instance.CreateOutputFile(reducer_process_id,
 			out_path);
 
 	// start 2 threads
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 //		  out_file_name- path to output file
 // output: void writing vector of vector into output file
 /////////////////////////////////////////////////////////////////////////////////
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name) {
 
