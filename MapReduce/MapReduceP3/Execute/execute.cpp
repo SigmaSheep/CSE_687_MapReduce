@@ -40,7 +40,7 @@ int main() {
 	//std::cin >> input_path;
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare/shakespeare";
 	//input_path = "C:/Users/Xin/Desktop/test/shakespeare";
-	input_path = "C:/Users/Xin/Desktop/test/shakespeare";
+	input_path = "C:/Users/Xin/Desktop/test/input";
 
 	//std::cout << "type intermediate directory\n";
 	//std::cin >> media_path;
@@ -67,7 +67,8 @@ int main() {
 		reduce_dll_path = reduce_dll_path_default;
 	//}
 	
-	WorkFlow(input_path, media_path, out_path, map_dll_path, reduce_dll_path, m_count, r_count);
+	WorkFlow(input_path, media_path, out_path, map_dll_path,
+		reduce_dll_path, m_count, r_count);
 	std::cin.ignore();
 	std::cin.get();
 	return 0;

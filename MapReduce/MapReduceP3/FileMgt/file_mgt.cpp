@@ -4,16 +4,22 @@
 std::vector<std::string> FileMgt::fileIter(const std::string path_p) {
 	std::vector<std::string> file_list;
 	namespace fs = boost::filesystem;
-
 	typedef boost::filesystem::recursive_directory_iterator iterator;
 	fs::path p(path_p);
-	fs::recursive_directory_iterator end = fs::recursive_directory_iterator();
-	fs::recursive_directory_iterator begin = fs::recursive_directory_iterator(p);
-
-	for (fs::recursive_directory_iterator it = begin; begin != end; it++) {
-		file_list.push_back(it->path().string());
-	}
-	return file_list;
+        if (!fs::exists(p)) {
+			BOOST_LOG_TRIVIAL(error) << "this " << path_p << " does not exist\n";
+			std::exit(EXIT_FAILURE);
+		} else {
+			fs::recursive_directory_iterator end =
+              fs::recursive_directory_iterator();
+			fs::recursive_directory_iterator begin =
+              fs::recursive_directory_iterator(p);
+			for (fs::recursive_directory_iterator it = begin; begin != end;
+               it++) {
+            file_list.push_back(it->path().string());
+			}
+			return file_list;
+		}
 }
 
 // print out vector of string for debuging

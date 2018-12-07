@@ -16,6 +16,7 @@ none
 Maintenance History:
 ===============
 11_16_2018 first release
+11_06_2018 check if path exist in fileIter
 */
 //
 
