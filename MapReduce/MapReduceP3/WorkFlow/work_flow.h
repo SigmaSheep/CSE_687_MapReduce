@@ -25,6 +25,7 @@ ReduceInterface.h
 Maintenance History:
 ===============
 11_16_2018 first release
+12_06_2018 check if all paths exist
 */
 //
 

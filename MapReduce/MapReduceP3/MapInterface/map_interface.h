@@ -28,6 +28,7 @@ none
 Maintenance History:
 ===============
 11_16_2018 first release
+11_06_2018 give exporting back to framework
 */
 //
 #include <string>
@@ -38,12 +39,10 @@ public:
 	MapInterface() {};
 	~MapInterface() {};
 	// Map function
-	// arguments: line of string, exporting function ptr, 
-	//            median file list
-	virtual void MapFunction(
-		const std::string line,//first arg
-		void(*exporting)(std::vector<std::pair<std::string, std::string>>,
-			std::vector<std::string>),//second
-		std::vector<std::string> median_file_list) {};//thrid
+	virtual std::vector<std::pair<std::string, std::string>> MapFunction(
+		const std::string line) {
+		std::vector<std::pair<std::string, std::string>> result;
+		return result;
+	};
 };
 #endif

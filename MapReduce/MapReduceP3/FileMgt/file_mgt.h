@@ -16,6 +16,8 @@ none
 Maintenance History:
 ===============
 11_16_2018 first release
+11_06_2018 check if path exist in fileIter
+           add clear directory
 */
 //
 
@@ -32,6 +34,7 @@ public:
 	FileMgt() {};
 	~FileMgt() {};
 
+	void ClearDirectory(std::string path);
 	std::vector<std::string> fileIter(const std::string path_p);
 	void printvector(const std::vector<std::string> input_vector);
 	void printPairVector(const std::vector<std::pair<std::string,
@@ -40,13 +43,10 @@ public:
 		const std::vector<std::vector<std::string>> input_vector);
 	std::vector<std::string> createMedianFiles(int proc_id,
 		int r_count, const std::string media_path);
-	std::vector<std::string> CreateReducebleFiles(int r_count, std::string media_path);
 	std::string createOutputFile(int reducer_id, const std::string out_path);
 	std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
 		int reducer_id, int r_count, std::string media_path);
 	std::vector<std::string> AllocateInputFiles(
 		int count, const std::vector<std::string> input_file_list);
-	void WriteReducebleFile(std::string reduceble_file_name,
-		std::vector<std::vector<std::string>> sorted_and_grouped_tokens);
 };
 #endif

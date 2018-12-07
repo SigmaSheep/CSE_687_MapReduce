@@ -25,10 +25,8 @@
 
 class Reduce_Dll ReduceClass : public ReduceInterface {
 public:
-	virtual void ReduceFunction(
-		const std::vector<std::vector<std::string>> input_vector,
-		void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
-		const std::string out_file_name);
+	virtual std::vector<std::vector<std::string>> ReduceFunction(
+		const std::vector<std::vector<std::string>> input_vector);
 	std::vector<std::vector<std::string>> sumValues(
 		const std::vector<std::vector<std::string>> input_vector);
 };
@@ -39,19 +37,15 @@ extern "C" Reduce_Dll ReduceInterface* createReduceIns()
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
-//void ReduceClass::ReduceFunction(
-//		const std::vector<std::vector<std::string>> input_vector,
-//		void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
-//		const std::string out_file_name)
-// function: this function count word frequence in the input_vector, and call
-//           exporting function to export the count to output file
+//std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
+//		const std::vector<std::vector<std::string>> input_vector)
+// function: this function count word frequence in the input_vector, and 
+//           return result back to framework
 /////////////////////////////////////////////////////////////////////////////////////
-void ReduceClass::ReduceFunction(
-	const std::vector<std::vector<std::string>> input_vector,
-	void(*exporting)(const std::vector<std::vector<std::string>>, std::string),
-	const std::string out_file_name) {
+std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
+	const std::vector<std::vector<std::string>> input_vector) {
 	std::vector<std::vector<std::string>> final_result = sumValues(input_vector);
-	exporting(final_result, out_file_name);
+	return final_result;
 }
 //////////////////////////////////////////////////////////////////////////////////////
 //std::vector<std::vector<std::string>> ReduceClass::sumValues(

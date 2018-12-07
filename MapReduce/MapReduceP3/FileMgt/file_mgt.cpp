@@ -4,16 +4,22 @@
 std::vector<std::string> FileMgt::fileIter(const std::string path_p) {
 	std::vector<std::string> file_list;
 	namespace fs = boost::filesystem;
-
 	typedef boost::filesystem::recursive_directory_iterator iterator;
 	fs::path p(path_p);
-	fs::recursive_directory_iterator end = fs::recursive_directory_iterator();
-	fs::recursive_directory_iterator begin = fs::recursive_directory_iterator(p);
-
-	for (fs::recursive_directory_iterator it = begin; begin != end; it++) {
-		file_list.push_back(it->path().string());
-	}
-	return file_list;
+        if (!fs::exists(p)) {
+			BOOST_LOG_TRIVIAL(error) << "this " << path_p << " does not exist\n";
+			std::exit(EXIT_FAILURE);
+		} else {
+			fs::recursive_directory_iterator end =
+              fs::recursive_directory_iterator();
+			fs::recursive_directory_iterator begin =
+              fs::recursive_directory_iterator(p);
+			for (fs::recursive_directory_iterator it = begin; begin != end;
+               it++) {
+            file_list.push_back(it->path().string());
+			}
+			return file_list;
+		}
 }
 
 // print out vector of string for debuging
@@ -37,21 +43,6 @@ std::vector<std::string> FileMgt::createMedianFiles(int proc_id, int r_count,
 		std::ofstream file(media_file_name, std::ios::out);
 	}
 	return median_file_list;
-};
-
-// create files ready for reduce
-std::vector<std::string> FileMgt::CreateReducebleFiles(int r_count,
-	std::string media_path) {
-	std::vector<std::string> reduceble_file_name_list;
-	for (int i = 0; i < r_count; i++) {
-		std::string reduceble_file_name = 
-			media_path + std::string("/reduceble")+std::to_string(i)
-			+std::string(".txt");
-		std::ofstream file(reduceble_file_name,
-			std::ios::out); // create& clear a file
-		reduceble_file_name_list.push_back(reduceble_file_name);
-	}
-	return reduceble_file_name_list;
 };
 
 // create output file and clear a file if already exists
@@ -131,7 +122,9 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 		auto end_position = input_file_list.begin() + ((i + 1) * elements_per_part);
 		std::string path_for_one_mapper;
 		for (auto it = start_position; it != end_position; ++it) {
+			path_for_one_mapper.append("\""); // in case file name has space
 			path_for_one_mapper.append(*it);
+			path_for_one_mapper.append("\"");
 			path_for_one_mapper.append(" ");
 		}
 		divided_file_list.push_back(path_for_one_mapper);
@@ -139,31 +132,20 @@ std::vector<std::string> FileMgt::AllocateInputFiles(
 	auto start_position = input_file_list.begin() + ((count - 1) * elements_per_part);
 	std::string path_for_one_mapper;
 	for (auto it = start_position; it != input_file_list.end(); ++it) {
+		path_for_one_mapper.append("\""); // in case file name has space
 		path_for_one_mapper.append(*it);
+		path_for_one_mapper.append("\"");
 		path_for_one_mapper.append(" ");
 	}
 	divided_file_list.push_back(path_for_one_mapper);
 	return divided_file_list;
 }
 
-void FileMgt::WriteReducebleFile(std::string reduceble_file_name,
-	std::vector<std::vector<std::string>> sorted_and_grouped_tokens) {
-	// reduceble_file_name should be an empty file 
-	// because CreateRe..Files always clear it
-	std::ofstream outfile(reduceble_file_name);
-	if (!outfile.is_open()) {
-		BOOST_LOG_TRIVIAL(error)<<"Reduceble_file is failed to open:"
-			<< std::string(52, ' ') << reduceble_file_name << "\n";
-		std::exit(EXIT_FAILURE);
-	} else {
-		for (auto it = sorted_and_grouped_tokens.begin(); 
-			it != sorted_and_grouped_tokens.end(); ++it) {
-			std::vector<std::string> inside_vector = *it;
-			for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
-				outfile << *it << " ";
-			}
-			outfile << "\n";
-		}
+void FileMgt::ClearDirectory(std::string path) { 
+	namespace fs = boost::filesystem;
+	fs::path path_to_remove(path);
+	for (fs::directory_iterator end_dir_it, it(path_to_remove); it != end_dir_it;
+       ++it) {
+    fs::remove_all(it->path());
 	}
-	outfile.close();
 }
