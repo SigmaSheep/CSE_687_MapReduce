@@ -25,10 +25,21 @@ void ReduceThreadFunc(ReduceInterface* reduce_pointer,
 	std::vector<std::vector<std::string>>::const_iterator end_position,
 	std::string result_file_name) {
 	static std::mutex mtx;//lock
+	// split input_vector to key and values for ReduceFunction
+	std::vector<std::string> key_vector;
+	std::vector<std::vector<std::string>> value_vector;
+	for (auto it = begin_positon; it != end_position; ++it) {
+		key_vector.push_back((*it).front());
+		auto value_start_position = (*it).begin() + 1;
+		auto value_end_postion = (*it).end();
+		std::vector<std::string> tmp(value_start_position,value_end_postion);
+		value_vector.push_back(tmp);
+	}
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens(
 		begin_positon, end_position);
 	std::vector<std::vector<std::string>> final_result = //call from Dll
-		reduce_pointer->ReduceFunction(std::ref(sorted_and_grouped_tokens));
+		reduce_pointer->ReduceFunction(std::ref(key_vector),
+			std::ref(value_vector));
 	mtx.lock();
 	ExportingOutputFile(final_result, result_file_name);
 	mtx.unlock();

@@ -26,8 +26,10 @@
 class Reduce_Dll ReduceClass : public ReduceInterface {
 public:
 	virtual std::vector<std::vector<std::string>> ReduceFunction(
-		const std::vector<std::vector<std::string>>& input_vector);
+		const std::vector<std::string>& key_vector,
+		const std::vector<std::vector<std::string>>& value_vector);
 	std::vector<std::vector<std::string>> sumValues(
+        const std::vector<std::string>& key_vector,
 		const std::vector<std::vector<std::string>>& input_vector);
 };
 
@@ -38,13 +40,16 @@ extern "C" Reduce_Dll ReduceInterface* CreateReduceIns()
 
 //////////////////////////////////////////////////////////////////////////////////////
 //std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
-//		const std::vector<std::vector<std::string>> input_vector)
+//		const std::string key,
+//		const std::vector<std::vector<std::string>> value_vector)
 // function: this function count word frequence in the input_vector, and 
 //           return result back to framework
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
-	const std::vector<std::vector<std::string>>& input_vector) {
-	std::vector<std::vector<std::string>> final_result = sumValues(input_vector);
+	const std::vector<std::string>& key_vector,
+	const std::vector<std::vector<std::string>>& value_vector) {
+	std::vector<std::vector<std::string>> final_result = 
+		sumValues(key_vector, std::ref(value_vector));
 	return final_result;
 }
 //////////////////////////////////////////////////////////////////////////////////////
@@ -54,18 +59,21 @@ std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
 //           It first convert string to int, and after sum convert it back to string.
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::vector<std::string>> ReduceClass::sumValues(
+    const std::vector<std::string>& key_vector,
 	const std::vector<std::vector<std::string>>& input_vector) {
 	std::vector<std::vector<std::string>> final_result;
+  auto key_iterator = key_vector.begin();
 	for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
 		std::vector<std::string> tmp_vector = *it;
 		std::vector<std::string> final_result_per_element;
-		final_result_per_element.push_back(tmp_vector.front());
+		final_result_per_element.push_back(*key_iterator);
 		int sum = 0;
-		for (auto it = tmp_vector.begin() + 1; it != tmp_vector.end(); ++it) {
+		for (auto it = tmp_vector.begin(); it != tmp_vector.end(); ++it) {
 			sum += std::stoi(*it);
 		}
 		final_result_per_element.push_back(std::to_string(sum));
 		final_result.push_back(final_result_per_element);
+        ++key_iterator;
 	}
 	return final_result;
 }
