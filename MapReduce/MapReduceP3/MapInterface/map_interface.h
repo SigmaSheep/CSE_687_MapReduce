@@ -40,7 +40,7 @@ public:
 	~MapInterface() {};
 	// Map function
 	virtual std::vector<std::pair<std::string, std::string>> MapFunction(
-		const std::string line) {
+		const std::string key, const std::string& value) {
 		std::vector<std::pair<std::string, std::string>> result;
 		return result;
 	};

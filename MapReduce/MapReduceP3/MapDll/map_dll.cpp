@@ -33,7 +33,7 @@ Maintenance History:
 class Map_DLL MapClass : public MapInterface {
 public:
 	virtual std::vector<std::pair<std::string, std::string>> MapFunction(
-		const std::string line);
+		const std::string key, const std::string& value);
 private:
 	std::string map_value = "1";
 	std::vector<std::pair<std::string, std::string>> Tokenizer(
@@ -45,10 +45,10 @@ extern "C" Map_DLL MapInterface* CreateMapIns() { return new MapClass(); }
 
 // tokenize the line of string into words, and call exporting function to export data.
 std::vector<std::pair<std::string, std::string>> MapClass::MapFunction(
-	const std::string line) {
+	const std::string key, const std::string& value) {
 	std::vector<std::pair<std::string, std::string>> tokenized_vector;
-	if (line.size() != 0) {
-		tokenized_vector = Tokenizer(line, map_value);
+	if (value.size() != 0) {
+		tokenized_vector = Tokenizer(value, map_value);
 	}
 	return tokenized_vector;
 }

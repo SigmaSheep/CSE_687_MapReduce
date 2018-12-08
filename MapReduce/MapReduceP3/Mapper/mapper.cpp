@@ -151,7 +151,8 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 				<< *it << "\n";
 			while (std::getline(infile, input_line)) {// read line
 				std::vector<std::pair<std::string, std::string>> key_values =
-					map_pointer->MapFunction(input_line);//call MapFunction from Dll
+					map_pointer->MapFunction(input_file, 
+						std::ref(input_line));//call MapFunction from Dll
 				mtx.lock(); // lock before exporting
 				ExportingMedianFile(std::ref(key_values),
 					std::ref(median_file_name_list));
