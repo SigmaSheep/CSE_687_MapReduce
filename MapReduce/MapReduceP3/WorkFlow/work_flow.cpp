@@ -10,6 +10,10 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	FileMgt file_mgt_instance;
 	std::vector<std::string> input_file_list =
 		file_mgt_instance.FileIter(input_path);
+	if (input_file_list.size() < (int)m_count) {
+		BOOST_LOG_TRIVIAL(error) << "Too many mapper processes";
+		std::exit(EXIT_FAILURE);
+	}
     file_mgt_instance.FileIter(media_path);//just check if exist
     file_mgt_instance.FileIter(out_path);//just check if exist
     file_mgt_instance.ClearDirectory(media_path);//clear median_path
