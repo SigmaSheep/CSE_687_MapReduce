@@ -26,12 +26,12 @@
 class Reduce_Dll ReduceClass : public ReduceInterface {
 public:
 	virtual std::vector<std::vector<std::string>> ReduceFunction(
-		const std::vector<std::vector<std::string>> input_vector);
+		const std::vector<std::vector<std::string>>& input_vector);
 	std::vector<std::vector<std::string>> sumValues(
-		const std::vector<std::vector<std::string>> input_vector);
+		const std::vector<std::vector<std::string>>& input_vector);
 };
 
-extern "C" Reduce_Dll ReduceInterface* createReduceIns()
+extern "C" Reduce_Dll ReduceInterface* CreateReduceIns()
 {
 	return new ReduceClass();
 }
@@ -43,7 +43,7 @@ extern "C" Reduce_Dll ReduceInterface* createReduceIns()
 //           return result back to framework
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
-	const std::vector<std::vector<std::string>> input_vector) {
+	const std::vector<std::vector<std::string>>& input_vector) {
 	std::vector<std::vector<std::string>> final_result = sumValues(input_vector);
 	return final_result;
 }
@@ -54,7 +54,7 @@ std::vector<std::vector<std::string>> ReduceClass::ReduceFunction(
 //           It first convert string to int, and after sum convert it back to string.
 /////////////////////////////////////////////////////////////////////////////////////
 std::vector<std::vector<std::string>> ReduceClass::sumValues(
-	const std::vector<std::vector<std::string>> input_vector) {
+	const std::vector<std::vector<std::string>>& input_vector) {
 	std::vector<std::vector<std::string>> final_result;
 	for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
 		std::vector<std::string> tmp_vector = *it;

@@ -41,7 +41,7 @@ private:
 	bool ValidChar(const char c) { return (c < -1 || c>255) ? false : true; };
 };
 
-extern "C" Map_DLL MapInterface* createMapIns() { return new MapClass(); }
+extern "C" Map_DLL MapInterface* CreateMapIns() { return new MapClass(); }
 
 // tokenize the line of string into words, and call exporting function to export data.
 std::vector<std::pair<std::string, std::string>> MapClass::MapFunction(

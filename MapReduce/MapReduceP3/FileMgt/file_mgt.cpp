@@ -23,7 +23,7 @@ std::vector<std::string> FileMgt::FileIter(const std::string path_p) {
 }
 
 // print out vector of string for debuging
-void FileMgt::PrintVector(const std::vector<std::string> input_vector) {
+void FileMgt::PrintVector(const std::vector<std::string>& input_vector) {
 	for (std::vector<std::string>::const_iterator it = input_vector.begin();
 		it != input_vector.end(); ++it) {
 		std::cout << *it << std::endl;
@@ -32,7 +32,7 @@ void FileMgt::PrintVector(const std::vector<std::string> input_vector) {
 
 // print out a vector of pairs for debuging
 void FileMgt::PrintPairVector(
-    const std::vector<std::pair<std::string, std::string>> input_vector) {
+    const std::vector<std::pair<std::string, std::string>>& input_vector) {
   std::pair<std::string, std::string> key_and_value;
   for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
     key_and_value = *it;
@@ -43,7 +43,7 @@ void FileMgt::PrintPairVector(
 
 // print out a vector of vector for debuging
 void FileMgt::PrintVectorVector(
-    const std::vector<std::vector<std::string>> input_vector) {
+    const std::vector<std::vector<std::string>>& input_vector) {
   for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
     std::vector<std::string> inside_vector = *it;
     for (auto it = inside_vector.begin(); it != inside_vector.end(); ++it) {
@@ -54,8 +54,8 @@ void FileMgt::PrintVectorVector(
 };
 
 // create multiple median files and clear file if already exists
-std::vector<std::string> FileMgt::CreateMedianFiles(int proc_id, int r_count,
-	const std::string media_path) {
+std::vector<std::string> FileMgt::CreateMedianFiles(int proc_id, 
+	int r_count,const std::string media_path) {
 	std::vector<std::string > median_file_list;
 	for (int i = 0; i < r_count; i++) {
 		std::string media_file_name = media_path + 
@@ -116,7 +116,7 @@ std::vector<std::pair<std::string, std::string>> FileMgt::ReadMediateFiles(
 // divide input files to m parts according to how many map processes
 // also make string ready for CreateProcess argument type like "path1 path2 ...pathn" 
 std::vector<std::string> FileMgt::AllocateInputFiles(
-	int count, const std::vector<std::string> input_file_list) {
+	int count, const std::vector<std::string>& input_file_list) {
 	std::vector<std::string> divided_file_list;
 	auto elements_per_part = input_file_list.size() / count;
 	for (int i = 0; i < (count-1); i++) {

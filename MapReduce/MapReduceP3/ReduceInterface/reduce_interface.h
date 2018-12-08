@@ -40,7 +40,7 @@ public:
 	ReduceInterface() {};
 	~ReduceInterface() {};
 	virtual  std::vector<std::vector<std::string>> ReduceFunction(
-		const std::vector<std::vector<std::string>> input_vector) {
+		const std::vector<std::vector<std::string>>& input_vector) {
 		std::vector<std::vector<std::string>> result;
 		return result;
 	};

@@ -28,7 +28,7 @@ void ReduceThreadFunc(ReduceInterface* reduce_pointer,
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens(
 		begin_positon, end_position);
 	std::vector<std::vector<std::string>> final_result = //call from Dll
-		reduce_pointer->ReduceFunction(sorted_and_grouped_tokens);
+		reduce_pointer->ReduceFunction(std::ref(sorted_and_grouped_tokens));
 	mtx.lock();
 	ExportingOutputFile(final_result, result_file_name);
 	mtx.unlock();
@@ -54,12 +54,13 @@ int main(int argc, char* argv[]) {
 	FileMgt file_mgt_instance;
 	//read median files to sortable_tokens
 	 std::vector<std::pair<std::string, std::string>> sortable_tokens =
-		 file_mgt_instance.ReadMediateFiles(reducer_process_id, r_count, media_path);
+		 file_mgt_instance.ReadMediateFiles(reducer_process_id,
+			 r_count, media_path);
 	 Sort sort_instance;
 	//sort sortable_tokens based on key(pair.first)
 	//group values with same key
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens 
-		= sort_instance.SortAndGroup(sortable_tokens);
+		= sort_instance.SortAndGroup(std::ref(sortable_tokens));
 
 	//  SECTION 3: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
@@ -69,7 +70,7 @@ int main(int argc, char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 	ReduceHolder rCtor = (ReduceHolder)GetProcAddress(h_mod_reduce,
-		"createReduceIns");
+		"CreateReduceIns");
 	if (rCtor == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "GetProcAddress reduce dll failed\n";
 		std::exit(EXIT_FAILURE);

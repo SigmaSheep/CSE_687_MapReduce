@@ -37,6 +37,6 @@ public:
 	Sort() {};
 	~Sort() {};
 	std::vector<std::vector<std::string>> SortAndGroup(
-		const std::vector<std::pair<std::string, std::string>> sortableTokens);
+		const std::vector<std::pair<std::string, std::string>>& sortableTokens);
 };
 #endif
