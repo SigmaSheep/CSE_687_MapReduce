@@ -15,7 +15,7 @@
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
 
 // as a globle function to export data
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name);
 
@@ -25,12 +25,23 @@ void ReduceThreadFunc(ReduceInterface* reduce_pointer,
 	std::vector<std::vector<std::string>>::const_iterator end_position,
 	std::string result_file_name) {
 	static std::mutex mtx;//lock
+	// split input_vector to key and values for ReduceFunction
+	std::vector<std::string> key_vector;
+	std::vector<std::vector<std::string>> value_vector;
+	for (auto it = begin_positon; it != end_position; ++it) {
+		key_vector.push_back((*it).front());
+		auto value_start_position = (*it).begin() + 1;
+		auto value_end_postion = (*it).end();
+		std::vector<std::string> tmp(value_start_position,value_end_postion);
+		value_vector.push_back(tmp);
+	}
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens(
 		begin_positon, end_position);
 	std::vector<std::vector<std::string>> final_result = //call from Dll
-		reduce_pointer->ReduceFunction(sorted_and_grouped_tokens);
+		reduce_pointer->ReduceFunction(std::ref(key_vector),
+			std::ref(value_vector));
 	mtx.lock();
-	exportingOutputFile(final_result, result_file_name);
+	ExportingOutputFile(final_result, result_file_name);
 	mtx.unlock();
 };
 
@@ -54,12 +65,13 @@ int main(int argc, char* argv[]) {
 	FileMgt file_mgt_instance;
 	//read median files to sortable_tokens
 	 std::vector<std::pair<std::string, std::string>> sortable_tokens =
-		 file_mgt_instance.ReadMediateFiles(reducer_process_id, r_count, media_path);
+		 file_mgt_instance.ReadMediateFiles(reducer_process_id,
+			 r_count, media_path);
 	 Sort sort_instance;
 	//sort sortable_tokens based on key(pair.first)
 	//group values with same key
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens 
-		= sort_instance.sortAndGroup(sortable_tokens);
+		= sort_instance.SortAndGroup(std::ref(sortable_tokens));
 
 	//  SECTION 3: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
@@ -69,7 +81,7 @@ int main(int argc, char* argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 	ReduceHolder rCtor = (ReduceHolder)GetProcAddress(h_mod_reduce,
-		"createReduceIns");
+		"CreateReduceIns");
 	if (rCtor == nullptr) {
 		BOOST_LOG_TRIVIAL(error) << "GetProcAddress reduce dll failed\n";
 		std::exit(EXIT_FAILURE);
@@ -79,7 +91,7 @@ int main(int argc, char* argv[]) {
 	// SECTION 4: create final result file and invoke threads
 	//            to call reducer function
 	std::string result_file_name  =
-		file_mgt_instance.createOutputFile(reducer_process_id,
+		file_mgt_instance.CreateOutputFile(reducer_process_id,
 			out_path);
 
 	// start 2 threads
@@ -111,7 +123,7 @@ int main(int argc, char* argv[]) {
 //		  out_file_name- path to output file
 // output: void writing vector of vector into output file
 /////////////////////////////////////////////////////////////////////////////////
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name) {
 

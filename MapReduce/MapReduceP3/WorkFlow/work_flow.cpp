@@ -9,14 +9,14 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	// put input files' paths into vector input_file_list
 	FileMgt file_mgt_instance;
 	std::vector<std::string> input_file_list =
-		file_mgt_instance.fileIter(input_path);
-    file_mgt_instance.fileIter(media_path);//just check if exist
-    file_mgt_instance.fileIter(out_path);//just check if exist
+		file_mgt_instance.FileIter(input_path);
+    file_mgt_instance.FileIter(media_path);//just check if exist
+    file_mgt_instance.FileIter(out_path);//just check if exist
     file_mgt_instance.ClearDirectory(media_path);//clear median_path
     file_mgt_instance.ClearDirectory(out_path); // clear out_path
 	// divide input files based on the map count
 	std::vector<std::string> divided_file_list =
-		file_mgt_instance.AllocateInputFiles(m_count, input_file_list);
+		file_mgt_instance.AllocateInputFiles(m_count, std::ref(input_file_list));
 	//combine arguments for mapper: process_id, map_dll_path,number of reducer,
 	//	                            median_file_path, divided_file_list
 	std::vector<std::string> argument_ready_mapper_input;

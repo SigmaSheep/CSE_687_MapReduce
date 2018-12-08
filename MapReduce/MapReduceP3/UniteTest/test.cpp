@@ -11,11 +11,11 @@
 #include <Windows.h>
 
 
-void exportingMedianFile(
+void ExportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::string median_file_name);
 
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name);
 
@@ -79,7 +79,7 @@ TEST_F(testallclass, testMapDll) {
 TEST_F(testallclass, testFileMgt_FileIter) {
 	std::vector<std::string> file_list;
 	FileMgt file_management_class_test;
-	file_list = file_management_class_test.fileIter(input_path);
+	file_list = file_management_class_test.FileIter(input_path);
 	auto len = file_list[0].length();
 	EXPECT_EQ("ifls.txt", file_list[0].substr(len - 8, len));
 }
@@ -178,7 +178,7 @@ TEST_F(testallclass, testFileMgtPartitionFunction) {
 	f7.close();
 	FileMgt file_management_class_test;
 	std::vector<std::string> file_list = 
-		file_management_class_test.fileIter("./input2");
+		file_management_class_test.FileIter("./input2");
 	std::vector<std::string> partioned_list =
 		file_management_class_test.AllocateInputFiles(3,file_list);
 
@@ -193,7 +193,7 @@ int main(int argc, char* argv[]) {
 	return RUN_ALL_TESTS();
 }
 
-void exportingMedianFile(
+void ExportingMedianFile(
 	const std::vector<std::pair<std::string, std::string>> tokenized,
 	std::string median_file_name) {
 
@@ -210,7 +210,7 @@ void exportingMedianFile(
 	outfile.close();
 };
 
-void exportingOutputFile(
+void ExportingOutputFile(
 	const std::vector<std::vector<std::string>> input_vector,
 	std::string out_file_name) {
 
