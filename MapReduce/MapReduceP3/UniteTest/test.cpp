@@ -11,14 +11,6 @@
 #include <Windows.h>
 
 
-void ExportingMedianFile(
-	const std::vector<std::pair<std::string, std::string>> tokenized,
-	std::string median_file_name);
-
-void ExportingOutputFile(
-	const std::vector<std::vector<std::string>> input_vector,
-	std::string out_file_name);
-
 class testallclass : public ::testing::Test {
 public:
 	testallclass() {}
@@ -37,45 +29,17 @@ public:
 	}
 
 	std::string test = "A B, C A.\nA.";
-	std::string input_path = ".\\input";
-	std::string median_path = ".\\median";
-	std::string output_path = ".\\output";
-	std::string input_file_name = ".\\input\\ifls.txt";
-	std::string median_file = ".\\median\\intermediate.txt";
-	std::string output_name = ".\\output\\final_result.txt";
+	std::string input_path = "./input";
+	std::string median_path = "./median";
+	std::string median_path_mapper = "../UniteTest/median";
+	std::string output_path = "./output";
+	std::string input_file_name = "./input/ifls.txt";
+	std::string input_file_mapper = "../UniteTest/input/ifls.txt";
+	std::string median_file = "./median/intermediate.txt";
+	std::string output_name = "./output/final_result.txt";
+	std::string map_dll = "../Debug/MapDll.dll";
+	std::string reduce_dll = "../Debug/ReduceDll.dll";
 };
-/*
-TEST_F(testallclass, testMapDll) {
-	FileMgt file_management_class_test;
-	file_management_class_test.createMedianFile(median_path);
-
-	typedef MapInterface*(CALLBACK* MapHolder_test)();
-	TCHAR map_dll_path_test[] = _T("./MapDll.dll");
-	HMODULE h_mod_map_test = LoadLibrary(map_dll_path_test);
-	if (h_mod_map_test == nullptr) {
-		std::exit(EXIT_FAILURE);
-	}
-	MapHolder_test mCtor = (MapHolder_test)GetProcAddress(h_mod_map_test, "createMapIns");
-	if (mCtor == nullptr) {
-		std::exit(EXIT_FAILURE);
-	}
-	MapInterface* map_pointer = mCtor();
-	map_pointer->MapFunction(test, &exportingMedianFile, median_file);
-	std::ifstream read_file(median_file);
-	std::string line;
-	if (read_file.is_open()) {
-		std::getline(read_file, line);
-		EXPECT_EQ("a 1", line);
-		std::getline(read_file, line);
-		EXPECT_EQ("b 1", line);
-		std::getline(read_file, line);
-		EXPECT_EQ("c 1", line);
-		std::getline(read_file, line);
-		EXPECT_EQ("a 1", line);
-	}
-	read_file.close();
-}
-*/
 TEST_F(testallclass, testFileMgt_FileIter) {
 	std::vector<std::string> file_list;
 	FileMgt file_management_class_test;
@@ -83,32 +47,59 @@ TEST_F(testallclass, testFileMgt_FileIter) {
 	auto len = file_list[0].length();
 	EXPECT_EQ("ifls.txt", file_list[0].substr(len - 8, len));
 }
-/*
 
-TEST_F(testallclass, testFileMgt_ReadList) {
-	std::vector<std::string> file_list;
-	std::vector<std::pair<std::string, std::string>> sortable_tokens;
-	FileMgt file_management_class;
-	file_list = file_management_class.fileIter(median_path);
-	sortable_tokens = file_management_class.readList(file_list);
-
-	EXPECT_EQ("a", sortable_tokens[0].first);
-	EXPECT_EQ("b", sortable_tokens[1].first);
-	EXPECT_EQ("c", sortable_tokens[2].first);
-	EXPECT_EQ("a", sortable_tokens[3].first);
+TEST_F(testallclass, testFileMgt_CreateMedianFiles) {
+	FileMgt file_management_class_test;
+	file_management_class_test.ClearDirectory(median_path);
+	std::vector<std::string> test_file_list =
+		file_management_class_test.CreateMedianFiles(1,
+			1, median_path);
+	EXPECT_EQ("./median/intermediate1_0.txt", test_file_list[0]);
 }
-*/
-/*
+TEST_F(testallclass, testFileMgt_CreateOutputFile) {
+	FileMgt file_management_class_test;
+	file_management_class_test.ClearDirectory(output_path);
+	std::string output_name = 
+		file_management_class_test.CreateOutputFile(1,output_path);
+	EXPECT_EQ("./output/final_result1.txt", output_name);
+}
+
+TEST_F(testallclass, testMapDll) {
+	FileMgt file_management_class_test;
+	typedef MapInterface*(CALLBACK* MapHolder_test)();
+	HMODULE h_mod_map_test = LoadLibrary((LPCWSTR)map_dll.c_str());
+	if (h_mod_map_test == nullptr) {
+		std::exit(EXIT_FAILURE);
+	}
+	MapHolder_test mCtor = (MapHolder_test)GetProcAddress(h_mod_map_test, "CreateMapIns");
+	if (mCtor == nullptr) {
+		std::exit(EXIT_FAILURE);
+	}
+	MapInterface* map_pointer = mCtor();
+	std::vector<std::pair<std::string, std::string>> result = 
+		map_pointer->MapFunction("some_key", test);
+	EXPECT_EQ("a", result[0].first);
+	EXPECT_EQ("b", result[1].first);
+	EXPECT_EQ("c", result[2].first);
+	EXPECT_EQ("a", result[3].first);
+}
+
 TEST_F(testallclass, testSortClass_sortFunction) {
 	std::vector<std::string> file_list;
 	std::vector<std::pair<std::string, std::string>> sortable_tokens;
-	FileMgt file_management_class;
-	file_list = file_management_class.fileIter(median_path);
-	sortable_tokens = file_management_class.readList(file_list);
+	std::pair<std::string, std::string> tmp_pair;
+	tmp_pair.second = "1";
+	tmp_pair.first = "c";
+	sortable_tokens.push_back(tmp_pair);
+	tmp_pair.first = "b";
+	sortable_tokens.push_back(tmp_pair);
+	tmp_pair.first = "a";
+	sortable_tokens.push_back(tmp_pair);
+	sortable_tokens.push_back(tmp_pair);
 
 	Sort sort_instance;
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens =
-		sort_instance.sortAndGroup(sortable_tokens);
+		sort_instance.SortAndGroup(sortable_tokens);
 
 	EXPECT_EQ("a", sorted_and_grouped_tokens[0][0]);
 	EXPECT_EQ("1", sorted_and_grouped_tokens[0][1]);
@@ -119,48 +110,40 @@ TEST_F(testallclass, testSortClass_sortFunction) {
 	EXPECT_EQ("c", sorted_and_grouped_tokens[2][0]);
 	EXPECT_EQ("1", sorted_and_grouped_tokens[2][1]);
 }
-*/
-/*
-TEST_F(testallclass, testReduce_reduceFunction) {
 
-	FileMgt file_management_class;
-	file_management_class.createOutputFile(output_path);
-
-	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
-	TCHAR re_dll_path[] = _T("./ReduceDll.dll");
-	HMODULE h_mod_reduce = LoadLibrary(re_dll_path);
-	if (h_mod_reduce == nullptr) {
+TEST_F(testallclass, testReduceDll) {
+	FileMgt file_management_class_test;
+	typedef ReduceInterface*(CALLBACK* ReduceHolder_test)();
+	HMODULE h_mod_reduce_test = LoadLibrary((LPCWSTR)reduce_dll.c_str());
+	if (h_mod_reduce_test == nullptr) {
 		std::exit(EXIT_FAILURE);
 	}
-	ReduceHolder rCtor = (ReduceHolder)GetProcAddress(h_mod_reduce, "createReduceIns");
-	if (rCtor == nullptr) {
+	ReduceHolder_test mCtor = (ReduceHolder_test)GetProcAddress(h_mod_reduce_test, "CreateMapIns");
+	if (mCtor == nullptr) {
 		std::exit(EXIT_FAILURE);
 	}
-	ReduceInterface* reduce_pointer = rCtor();
+	ReduceInterface* reduce_pointer = mCtor();
 
-	std::vector<std::string> file_list;
-	std::vector<std::pair<std::string, std::string>> sortable_tokens;
-	file_list = file_management_class.fileIter(median_path);
-	sortable_tokens = file_management_class.readList(file_list);
-	Sort sort_instance;
-	std::vector<std::vector<std::string>> sorted_and_grouped_tokens =
-		sort_instance.sortAndGroup(sortable_tokens);
+	std::vector<std::string> key_vector;
+	std::vector<std::vector<std::string>> value_vector;
+	key_vector.push_back("a");
+	value_vector[0].push_back("1");
+	value_vector[0].push_back("1");
+	key_vector.push_back("b");
+	value_vector[1].push_back("1");
+	key_vector.push_back("c");
+	value_vector[2].push_back("1");
 
-	reduce_pointer->ReduceFunction(sorted_and_grouped_tokens, &exportingOutputFile, output_name);
-
-	std::ifstream read_out_file(output_name);
-	std::string out_line;
-	if (read_out_file.is_open()) {
-		std::getline(read_out_file, out_line);
-		EXPECT_EQ("a 3 ", out_line);
-		std::getline(read_out_file, out_line);
-		EXPECT_EQ("b 1 ", out_line);
-		std::getline(read_out_file, out_line);
-		EXPECT_EQ("c 1 ", out_line);
-	}
-	read_out_file.close();
+	std::vector<std::vector<std::string>> result =
+		reduce_pointer->ReduceFunction(key_vector, value_vector);
+	EXPECT_EQ("a", result[0][0]);
+	EXPECT_EQ("2", result[0][1]);
+	EXPECT_EQ("b", result[1][0]);
+	EXPECT_EQ("1", result[1][1]);
+	EXPECT_EQ("c", result[2][0]);
+	EXPECT_EQ("1", result[2][1]);
 }
-*/
+
 TEST_F(testallclass, testFileMgtPartitionFunction) {
 	std::ofstream f1("./input2/f1.txt", std::ios::out);
 	std::ofstream f2("./input2/f2.txt", std::ios::out);
@@ -183,50 +166,13 @@ TEST_F(testallclass, testFileMgtPartitionFunction) {
 		file_management_class_test.AllocateInputFiles(3,file_list);
 
 	auto len = partioned_list[0].length();
-	EXPECT_EQ("./input2\\f1.txt ./input2\\f2.txt ", partioned_list[0]);
-	EXPECT_EQ("./input2\\f3.txt ./input2\\f4.txt ", partioned_list[1]);
-	EXPECT_EQ("./input2\\f5.txt ./input2\\f6.txt ./input2\\f7.txt ", partioned_list[2]);
+	EXPECT_EQ("\"./input2\\f1.txt\" \"./input2\\f2.txt\" ", partioned_list[0]);
+	EXPECT_EQ("\"./input2\\f3.txt\" \"./input2\\f4.txt\" ", partioned_list[1]);
+	EXPECT_EQ("\"./input2\\f5.txt\" \"./input2\\f6.txt\" \"./input2\\f7.txt\" ",
+		partioned_list[2]);
 }
 
 int main(int argc, char* argv[]) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
-
-void ExportingMedianFile(
-	const std::vector<std::pair<std::string, std::string>> tokenized,
-	std::string median_file_name) {
-
-	std::ofstream outfile(median_file_name, std::ios::app);
-	if (outfile.is_open()) {
-		for (auto it = tokenized.begin(); it != tokenized.end(); ++it) {
-			std::pair<std::string, std::string> tmp_pair = *it;
-			outfile << tmp_pair.first << " " << tmp_pair.second << std::endl;
-		}
-	}
-	else {
-		std::exit(EXIT_FAILURE);
-	}
-	outfile.close();
-};
-
-void ExportingOutputFile(
-	const std::vector<std::vector<std::string>> input_vector,
-	std::string out_file_name) {
-
-	std::ofstream outfile(out_file_name, std::ios::app);
-	if (outfile.is_open()) {
-		for (auto it = input_vector.begin(); it != input_vector.end(); ++it) {
-			std::vector<std::string> inside_vector = *it;
-			for (auto it = inside_vector.begin(); it !=
-				inside_vector.end(); ++it) {
-				outfile << *it << " ";
-			}
-			outfile << std::endl;
-		}
-	}
-	else {
-		std::exit(EXIT_FAILURE);
-	}
-	outfile.close();
-};
