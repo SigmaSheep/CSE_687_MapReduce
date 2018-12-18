@@ -29,8 +29,7 @@ int main(int argc, char * argv[]) {
 			"Less arguments recieved in mapper process\n";
 		std::exit(EXIT_FAILURE);
 	}
-	//int stub_id = boost::lexical_cast<int>(argv[0]);
-	//int stub_count = boost::lexical_cast<int>(argv[1]);
+
 	int mapper_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id<<" is created\n";
@@ -126,19 +125,18 @@ void ExportingMedianFile(
 //		std::vector<std::string>::const_iterator end_input_file)
 // run as map thread function
 /////////////////////////////////////////////////////////////////////////////////
-void MapThreadFunction(	int thread_id, int mapper_process_id, 
+void MapThreadFunction(int thread_id, int mapper_process_id, 
 	std::string map_dll_path,
 	int r_count, std::string median_path, MapInterface* map_pointer,
 	std::vector<std::string>::const_iterator start_input_file,
 	std::vector<std::string>::const_iterator end_input_file) {
-	std::cout << "im here";
 	static std::mutex mtx; // lock
 	std::vector<std::string> input_file_list(
 		start_input_file, end_input_file);
 	FileMgt file_mgt_instance;
 	// create median file name list
 	std::vector<std::string> median_file_name_list =
-		file_mgt_instance.CreateMedianFiles( mapper_process_id, r_count,
+		file_mgt_instance.CreateMedianFiles(mapper_process_id, r_count,
 			median_path);
 	for (auto it = input_file_list.begin();//map each file in loop 
 		it != input_file_list.end(); ++it) {

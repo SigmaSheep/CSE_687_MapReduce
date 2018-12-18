@@ -32,8 +32,9 @@ void Controller::Start() {
 		
 		/*
 		char reply[max_length];
-		size_t reply_length = boost::asio::read(s,
-			boost::asio::buffer(reply, request_length));
+		SingleConnection connect1(ip_list_[0], port_list_[0], io_service);
+
+		size_t reply_length = connect1.socket_.read_some(boost::asio::buffer(reply));
 		std::cout << "Reply is: ";
 		std::cout.write(reply, reply_length);
 		std::cout << "\n";

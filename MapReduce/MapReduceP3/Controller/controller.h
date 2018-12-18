@@ -5,7 +5,8 @@
 #include <boost/asio.hpp>
 #include <string>
 #include <vector>
-class SingleConnection {
+class SingleConnection // inheritent shared_ptr to keep instance alive
+	:public std::enable_shared_from_this<SingleConnection>{ 
 public:
 	SingleConnection(std::string ip_address, std::string port,
 		boost::asio::io_service& io_service)
@@ -38,6 +39,7 @@ private:
 	std::string arguments_;
 	std::list<SingleConnection> connection_list_;
 	std::vector<boost::asio::ip::tcp::endpoint> endpoint_list_;
+	std::vector<boost::asio::ip::tcp::socket> socket_list_;
 	enum { max_length = 1024 };
 	std::vector<std::string> ip_list_;
 	std::vector<std::string> port_list_;
