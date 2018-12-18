@@ -3,8 +3,10 @@
 // WorkFlow handles all working logics
 WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	const std::string out_path, const std::string map_dll_path,
-	const std::string reduce_dll_path, int m_count, int r_count) {
-
+	const std::string reduce_dll_path, int m_count, int r_count,
+	const int stub_count, const int stub_id) {
+	/*
+	
 	// SECTION 1: invok mapper processes
 	// put input files' paths into vector input_file_list
 	FileMgt file_mgt_instance;
@@ -20,14 +22,20 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
     file_mgt_instance.ClearDirectory(out_path); // clear out_path
 	// divide input files based on the map count
 	std::vector<std::string> divided_file_list =
-		file_mgt_instance.AllocateInputFiles(m_count, std::ref(input_file_list));
-	//combine arguments for mapper: process_id, map_dll_path,number of reducer,
+		file_mgt_instance.AllocateInputFiles(m_count*stub_count,
+			std::ref(input_file_list));
+	std::vector<std::string> input_file_list_for_this_stub(
+		divided_file_list.begin()+stub_id*r_count,
+		divided_file_list.begin()+(stub_id+1)*r_count);
+	//combine arguments for mapper: stub_id, number of stubs
+	//								process_id, map_dll_path,number of reducer,
 	//	                            median_file_path, divided_file_list
 	std::vector<std::string> argument_ready_mapper_input;
-	for (int i = 0; i < r_count;i++) {
-		argument_ready_mapper_input.push_back(std::to_string(i)+ " "
+	for (int i = 0; i < m_count;i++) {
+		argument_ready_mapper_input.push_back(std::to_string(stub_id)
+			+ std::to_string(stub_count)+ " " + std::to_string(i)+ " "
 			+ map_dll_path + " " + std::to_string(r_count) + " "
-			+ media_path + " " + divided_file_list[i]);
+			+ media_path + " " + input_file_list_for_this_stub[i]);
 	}
 	// initialize windows.h process variables
 	STARTUPINFO start_info; // establishes properties of child process
@@ -112,4 +120,6 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 		CloseHandle(tmp.hProcess);
 	}
 	BOOST_LOG_TRIVIAL(info) << "Work finished\n";
+	
+	*/
 }

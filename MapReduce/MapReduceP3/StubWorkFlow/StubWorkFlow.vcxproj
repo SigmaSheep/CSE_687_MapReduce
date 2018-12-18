@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{DE570A0C-C8FD-4571-B874-0C61BDC95EE8}</ProjectGuid>
-    <RootNamespace>FileMgt</RootNamespace>
+    <ProjectGuid>{53DE036E-B4C1-4193-8CDC-81AD4E24E60A}</ProjectGuid>
+    <RootNamespace>StubWorkFlow</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,31 +70,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
-    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
@@ -127,10 +124,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="file_mgt.h" />
+    <ClInclude Include="stub_work_flow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="file_mgt.cpp" />
+    <ClCompile Include="stub_work_flow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
+      <Project>{de570a0c-c8fd-4571-b874-0c61bdc95ee8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

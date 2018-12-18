@@ -70,11 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,6 +84,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -92,6 +94,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,9 +132,6 @@
     <ClCompile Include="work_flow.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileMgt\FileMgt.vcxproj">
-      <Project>{de570a0c-c8fd-4571-b874-0c61bdc95ee8}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\Sort\Sort.vcxproj">
       <Project>{cc3201ce-ae71-45b8-8842-8defe5f272e8}</Project>
     </ProjectReference>

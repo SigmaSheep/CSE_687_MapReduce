@@ -72,7 +72,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
     <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -80,6 +84,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -88,6 +93,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

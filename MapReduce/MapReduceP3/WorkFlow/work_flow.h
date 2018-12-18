@@ -29,7 +29,6 @@ Maintenance History:
 */
 //
 
-#include "../FileMgt/file_mgt.h"
 #include "../MapInterface/map_interface.h"
 #include "../Sort/sort.h"
 #include "../ReduceInterface/reduce_interface.h"
@@ -49,6 +48,7 @@ public:
 	~WorkFlow() {};
 	WorkFlow(const std::string input_path, const std::string media_path,
 		const std::string out_path, const std::string map_dll_path,
-		const std::string reduce_dll_path, int m_count, int r_count);
+		const std::string reduce_dll_path, int m_count, int r_count,
+		const int stub_count, const int stub_id);
 };
 #endif

@@ -70,11 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\x64\lib;E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0\stage\win32\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -83,6 +84,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -95,6 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>E:\Progs\Gen\MnP\Pkgs\boost_1_68_0\boost_1_68_0</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +135,9 @@
     <ClCompile Include="execute.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Controller\Controller.vcxproj">
+      <Project>{1632c19e-f7c9-4195-85ed-26614f6c4e00}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\WorkFlow\WorkFlow.vcxproj">
       <Project>{3776da9c-04df-496a-b26b-2b44e1c3da09}</Project>
     </ProjectReference>

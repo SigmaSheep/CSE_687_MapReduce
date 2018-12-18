@@ -54,7 +54,7 @@ void FileMgt::PrintVectorVector(
 };
 
 // create multiple median files and clear file if already exists
-std::vector<std::string> FileMgt::CreateMedianFiles(int proc_id, 
+std::vector<std::string> FileMgt::CreateMedianFiles( int proc_id, 
 	int r_count,const std::string media_path) {
 	std::vector<std::string > median_file_list;
 	for (int i = 0; i < r_count; i++) {

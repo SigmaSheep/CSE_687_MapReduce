@@ -1,3 +1,4 @@
+
 /////////////////////////////////////////////////////////////////////
 //  Execute.cpp -	 executable program							   //
 //  ver 1.0                                                        //
@@ -20,6 +21,7 @@ Maintenance History:
 
 #include <iostream>
 #include <string>
+#include "../Controller/controller.h"
 #include "../WorkFlow/work_flow.h"
 
 int main() {
@@ -27,7 +29,7 @@ int main() {
 
 	std::string input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, map_dll_path_default, reduce_dll_path_default;
-
+	/*
 	std::cout << "type number of mapper processes\n";
 	std::cin >> m_count;
 
@@ -57,9 +59,28 @@ int main() {
 	if (reduce_dll_path == "d") {
 		reduce_dll_path = reduce_dll_path_default;
 	}
-	
-	WorkFlow(input_path, media_path, out_path, map_dll_path,
-		reduce_dll_path, m_count, r_count);
+	*/
+	input_path = "C:/Users/Xin-PC/Desktop/test/input";
+	media_path = "C:/Users/Xin-PC/Desktop/test/median";
+	out_path = "C:/Users/Xin-PC/Desktop/test/output";
+	map_dll_path = "../Debug/MapDll.dll";
+	reduce_dll_path = "../Debug/ReduceDll.dll";
+	m_count = 2;
+	r_count = 2;
+
+	int stub_count = 2;
+	std::vector<std::string> ip_list;
+	std::vector<std::string> port_list;
+	ip_list.push_back("localhost");
+	ip_list.push_back("localhost");
+	port_list.push_back("8080");
+	port_list.push_back("6060");
+	Controller controller;
+	controller.BindArguments(input_path, media_path, out_path, map_dll_path,
+		reduce_dll_path, m_count, r_count,
+		stub_count, ip_list, port_list);
+	controller.Start();
+
 	std::cin.ignore();
 	std::cin.get();
 	return 0;

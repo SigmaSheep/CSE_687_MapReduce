@@ -1,5 +1,6 @@
 #ifndef FILEMGT_H
 #define FILEMGT_H
+
 /////////////////////////////////////////////////////////////////////
 //  FileMgt.h -	 file management class						   //
 //  ver 1.0                                                        //
@@ -20,7 +21,6 @@ Maintenance History:
            add clear directory
 */
 //
-
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(info/error)
 #include <fstream>// std::ofstream, std::ifstream

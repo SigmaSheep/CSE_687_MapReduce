@@ -10,7 +10,7 @@
 #include <tchar.h>
 #include <Windows.h>
 
-
+/*
 class testallclass : public ::testing::Test {
 public:
 	testallclass() {}
@@ -171,7 +171,7 @@ TEST_F(testallclass, testFileMgtPartitionFunction) {
 	EXPECT_EQ("\"./input2\\f5.txt\" \"./input2\\f6.txt\" \"./input2\\f7.txt\" ",
 		partioned_list[2]);
 }
-
+*/
 int main(int argc, char* argv[]) {
 	testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
