@@ -193,17 +193,17 @@ void MapHeartBeatThreadFunc() {
 	chat_client c(io_context, endpoints,false);
 
 	std::thread t([&io_context]() { io_context.run(); });
-	char line1[chat_message::max_body_length + 1];
+	char line1[ChatMessage::max_body_length + 1];
 	while (finish_flag == true) {
 		::Sleep(2500);
-		chat_message msg;
+		ChatMessage msg;
 		char line[25] = "Mapping";
 		msg.body_length(std::strlen(line));
 		std::memcpy(msg.body(), line, msg.body_length());
 		msg.encode_header();
 		c.write(msg);
 	}
-	chat_message msg;
+	ChatMessage msg;
 	char line[25] = "map_process_done";
 	msg.body_length(std::strlen(line));
 	std::memcpy(msg.body(), line, msg.body_length());

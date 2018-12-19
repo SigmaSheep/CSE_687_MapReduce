@@ -5,12 +5,12 @@
 #include <cstdlib>
 #include <cstring>
 
-class chat_message {
+class ChatMessage {
 public:
 	enum { header_length = 4 };
 	enum { max_body_length = 512 };
 
-	chat_message()
+	ChatMessage()
 		: body_length_(0){}
 
 	const char* data() const {

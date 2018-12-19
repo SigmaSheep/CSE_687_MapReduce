@@ -14,7 +14,7 @@
 
 //----------------------------------------------------------------------
 
-typedef std::deque<chat_message> chat_message_queue;
+typedef std::deque<ChatMessage> chat_message_queue;
 
 //----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ class chat_participant
 {
 public:
 	virtual ~chat_participant() {}
-	virtual void deliver(const chat_message& msg) = 0;
+	virtual void deliver(const ChatMessage& msg) = 0;
 };
 
 typedef std::shared_ptr<chat_participant> chat_participant_ptr;
@@ -44,7 +44,7 @@ public:
 		participants_.erase(participant);
 	}
 
-	void deliver(const chat_message& msg)
+	void deliver(const ChatMessage& msg)
 	{
 		recent_msgs_.push_back(msg);
 		while (recent_msgs_.size() > max_recent_msgs)
@@ -61,7 +61,7 @@ public:
 	void AddOneFinishedMapper() {
 		finished_mapper_++;
 		if (finished_mapper_ == number_of_mapper_) {
-			chat_message msg;
+			ChatMessage msg;
 			char line[25] = "AllMappingFinished";
 			msg.body_length(std::strlen(line));
 			std::memcpy(msg.body(), line, msg.body_length());
@@ -99,7 +99,7 @@ public:
 		do_read_header();
 	}
 
-	void deliver(const chat_message& msg)
+	void deliver(const ChatMessage& msg)
 	{
 		bool write_in_progress = !write_msgs_.empty();
 		write_msgs_.push_back(msg);
@@ -114,7 +114,7 @@ private:
 	{
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.data(), chat_message::header_length),
+			boost::asio::buffer(read_msg_.data(), ChatMessage::header_length),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/)
 		{
 			if (!ec && read_msg_.decode_header())
@@ -180,7 +180,7 @@ private:
 
 	boost::asio::ip::tcp::socket socket_;
 	chat_room& room_;
-	chat_message read_msg_;
+	ChatMessage read_msg_;
 	chat_message_queue write_msgs_;
 };
 

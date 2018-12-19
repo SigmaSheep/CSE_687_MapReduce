@@ -10,7 +10,7 @@
 
 using boost::asio::ip::tcp;
 
-typedef std::deque<chat_message> chat_message_queue;
+typedef std::deque<ChatMessage> chat_message_queue;
 
 class chat_client
 {
@@ -24,7 +24,7 @@ public:
 		do_connect(endpoints);
 	}
 
-	void write(const chat_message& msg)
+	void write(const ChatMessage& msg)
 	{
 		boost::asio::post(io_context_,
 			[this, msg]()
@@ -59,7 +59,7 @@ private:
 	void do_read_header()
 	{
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.data(), chat_message::header_length),
+			boost::asio::buffer(read_msg_.data(), ChatMessage::header_length),
 			[this](boost::system::error_code ec, std::size_t /*length*/)
 		{
 			if (!ec && read_msg_.decode_header())
@@ -121,7 +121,7 @@ private:
 private:
 	boost::asio::io_context& io_context_;
 	tcp::socket socket_;
-	chat_message read_msg_;
+	ChatMessage read_msg_;
 	chat_message_queue write_msgs_;
 	bool reducer_flag_;
 };
