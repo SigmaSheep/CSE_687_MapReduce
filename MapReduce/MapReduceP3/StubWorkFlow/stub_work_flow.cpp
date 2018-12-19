@@ -12,8 +12,8 @@ void StubWorkFlow::InvokeMapperProcess() {
 	}
 	file_mgt_instance.FileIter(media_path_);//just check if exist
 	file_mgt_instance.FileIter(out_path_);//just check if exist
-	file_mgt_instance.ClearDirectory(media_path_);//clear median_path
-	file_mgt_instance.ClearDirectory(out_path_); // clear out_path
+	//file_mgt_instance.ClearDirectory(media_path_);//clear median_path
+	//file_mgt_instance.ClearDirectory(out_path_); // clear out_path
 	// divide input files based on the map count
 	std::vector<std::string> divided_file_list =
 		file_mgt_instance.AllocateInputFiles(m_count_,
@@ -74,18 +74,16 @@ void StubWorkFlow::InvokeMapperProcess() {
 		CloseHandle(tmp.hProcess);
 	}
 	BOOST_LOG_TRIVIAL(info) << "Mapping finished\n";
-	
 };
 
 void StubWorkFlow::InvokeReducerProcess() {
-
+	std::cout << "start InvokeReducerProcess\n";
 	// calculate how many processes are included in this stub
 	int first_reducer_id_in_stub = stub_id_ * (r_count_ / stub_count_);
 	int last_reducer_id_in_stub;
 	if (stub_id_ == stub_count_) {
 		last_reducer_id_in_stub = r_count_ - 1;
-	}
-	else {
+	} else {
 		last_reducer_id_in_stub = (stub_id_ + 1)*(r_count_ / stub_count_);
 	}
 

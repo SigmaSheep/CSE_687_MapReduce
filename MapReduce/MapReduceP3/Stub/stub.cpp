@@ -61,8 +61,10 @@ int main() {
 	StubWorkFlow stub_work_flow(input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, m_count, r_count, stub_count, stub_id);
 
+
 	stub_work_flow.InvokeMapperProcess();
-	//stub_work_flow.InvokeReducerProcess();
+	stub_work_flow.InvokeReducerProcess();
+
 	
 	//boost::asio::write(socket,boost::asio::buffer("F"));
 	//len = socket.read_some(boost::asio::buffer(buf, max_length));

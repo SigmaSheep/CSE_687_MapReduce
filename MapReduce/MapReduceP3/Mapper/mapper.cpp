@@ -185,7 +185,6 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 };
 
 void MapHeartBeatThreadFunc() {
-	std::cout << "thread started\n";
 	boost::asio::io_context io_context;
 
 	boost::asio::ip::tcp::resolver resolver(io_context);

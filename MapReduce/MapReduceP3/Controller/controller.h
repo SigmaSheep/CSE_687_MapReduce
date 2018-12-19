@@ -35,8 +35,8 @@ public:
 	void join(chat_participant_ptr participant)
 	{
 		participants_.insert(participant);
-		//for (auto msg : recent_msgs_)
-			//participant->deliver(msg);
+		for (auto msg : recent_msgs_)
+			participant->deliver(msg);
 	}
 
 	void leave(chat_participant_ptr participant)
@@ -66,10 +66,9 @@ public:
 			msg.body_length(std::strlen(line));
 			std::memcpy(msg.body(), line, msg.body_length());
 			msg.encode_header();
-			for (auto participant : participants_) {
-				std::cout << "im casting\n";
+			recent_msgs_.push_back(msg);
+			for (auto participant : participants_)
 				participant->deliver(msg);
-			}
 		}
 	}
 
@@ -138,13 +137,15 @@ private:
 		{
 			if (!ec)
 			{
+
 				std::string s(read_msg_.body(), read_msg_.body_length());
+				//std::cout.write(read_msg_.body(), read_msg_.body_length());
+				//std::cout << s << "\n";
+				room_.deliver(read_msg_);
+
 				if (s == "map_process_done") {
 					room_.AddOneFinishedMapper();
 				}
-				//std::cout.write(read_msg_.body(), read_msg_.body_length());
-				std::cout << s << "\n";
-				room_.deliver(read_msg_);
 				do_read_header();
 			}
 			else
@@ -215,8 +216,6 @@ private:
 	boost::asio::ip::tcp::acceptor acceptor_;
 	chat_room room_;
 };
-
-//----------------------------------------------------------------------
 
 
 #endif

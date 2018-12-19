@@ -1,12 +1,15 @@
 //12_04_2018 created
 //12_06_2018 move sort and group here from work flow
 //           add multi-threads
+#include "../ChatMessage/chat_message.h"
 #include "../FileMgt/file_mgt.h"
 #include "../ReduceInterface/reduce_interface.h"
 #include "../Sort/sort.h" // Sort sort_instance.sortAndGroup()
+#include "../UpdateClient/update_client.h"
 
 #include <boost/algorithm/string/classification.hpp> // boost::for is_any_of
 #include <boost/algorithm/string/split.hpp> // boost::split
+#include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
 #include <iostream> // std::cout for debugging 
@@ -45,6 +48,7 @@ void ReduceThreadFunc(ReduceInterface* reduce_pointer,
 	mtx.unlock();
 };
 
+
 int main(int argc, char* argv[]) {
 	// SECTION 1: recieve parameters:
 	// process_id, reduce_dll_path,number of reducer, output_path, media_path 
@@ -61,7 +65,19 @@ int main(int argc, char* argv[]) {
 	std::string out_path = argv[3];
 	std::string media_path = argv[4];
 
-	// SECTION 2: sort and group data from median files 
+	// SECTION 2: wait controller's signal to start
+	//::Sleep(10000);
+	/*
+	boost::asio::io_context io_context;
+	tcp::resolver resolver(io_context);
+	tcp::resolver::query query("localhost", "6060");// hard coded 
+	auto endpoints = resolver.resolve(query);
+	chat_client c(io_context, endpoints, true);
+	std::thread t([&io_context]() { io_context.run(); });
+	t.join();
+	std::cout << "reducer start \n";
+	*/
+	// SECTION 3: sort and group data from median files 
 	FileMgt file_mgt_instance;
 	//read median files to sortable_tokens
 	 std::vector<std::pair<std::string, std::string>> sortable_tokens =
@@ -73,7 +89,7 @@ int main(int argc, char* argv[]) {
 	std::vector<std::vector<std::string>> sorted_and_grouped_tokens 
 		= sort_instance.SortAndGroup(std::ref(sortable_tokens));
 
-	//  SECTION 3: load dll
+	//  SECTION 4: load dll
 	typedef ReduceInterface*(CALLBACK* ReduceHolder)();
 	HMODULE h_mod_reduce = LoadLibrary(reduce_dll_path.c_str());
 	if (h_mod_reduce == nullptr) {
@@ -88,7 +104,7 @@ int main(int argc, char* argv[]) {
 	}
 	ReduceInterface* reduce_pointer = rCtor();
 
-	// SECTION 4: create final result file and invoke threads
+	// SECTION 5: create final result file and invoke threads
 	//            to call reducer function
 	std::string result_file_name  =
 		file_mgt_instance.CreateOutputFile(reducer_process_id,

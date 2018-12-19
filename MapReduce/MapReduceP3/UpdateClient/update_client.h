@@ -19,7 +19,8 @@ public:
 		const tcp::resolver::results_type& endpoints,
 		const bool reducer_flag)
 		: io_context_(io_context),
-		socket_(io_context), reducer_flag_(reducer_flag) {
+		socket_(io_context), reducer_flag_(reducer_flag)
+	{
 		do_connect(endpoints);
 	}
 
