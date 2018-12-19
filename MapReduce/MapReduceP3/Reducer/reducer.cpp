@@ -66,17 +66,16 @@ int main(int argc, char* argv[]) {
 	std::string media_path = argv[4];
 
 	// SECTION 2: wait controller's signal to start
-	//::Sleep(10000);
-	/*
+	
 	boost::asio::io_context io_context;
 	tcp::resolver resolver(io_context);
-	tcp::resolver::query query("localhost", "6060");// hard coded 
+	tcp::resolver::query query("localhost", "5050");// hard coded 
 	auto endpoints = resolver.resolve(query);
 	chat_client c(io_context, endpoints, true);
 	std::thread t([&io_context]() { io_context.run(); });
 	t.join();
-	std::cout << "reducer start \n";
-	*/
+	BOOST_LOG_TRIVIAL(info) << "Reducer process #"
+		<< reducer_process_id << " starts to work\n";
 	// SECTION 3: sort and group data from median files 
 	FileMgt file_mgt_instance;
 	//read median files to sortable_tokens

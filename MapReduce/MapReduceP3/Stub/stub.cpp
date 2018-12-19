@@ -11,6 +11,7 @@
 #include "../StubWorkFlow/stub_work_flow.h"
 
 int main() {
+	std::cout << "type the port for this stub like 8080\n";
 	int port;
 	std::cin >> port;
 	enum { max_length = 1024 };
@@ -61,16 +62,8 @@ int main() {
 	StubWorkFlow stub_work_flow(input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, m_count, r_count, stub_count, stub_id);
 
-
 	stub_work_flow.InvokeMapperProcess();
 	stub_work_flow.InvokeReducerProcess();
-
-	
-	//boost::asio::write(socket,boost::asio::buffer("F"));
-	//len = socket.read_some(boost::asio::buffer(buf, max_length));
-		
-	//std::string feed_back(buf, len);
-	//std::cout << feed_back << "\n";
 
 	std::cin.get();
 	return 0;

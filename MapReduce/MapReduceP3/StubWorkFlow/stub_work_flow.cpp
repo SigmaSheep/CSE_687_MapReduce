@@ -81,8 +81,8 @@ void StubWorkFlow::InvokeReducerProcess() {
 	// calculate how many processes are included in this stub
 	int first_reducer_id_in_stub = stub_id_ * (r_count_ / stub_count_);
 	int last_reducer_id_in_stub;
-	if (stub_id_ == stub_count_) {
-		last_reducer_id_in_stub = r_count_ - 1;
+	if (stub_id_ == stub_count_-1) {
+		last_reducer_id_in_stub = r_count_;
 	} else {
 		last_reducer_id_in_stub = (stub_id_ + 1)*(r_count_ / stub_count_);
 	}
@@ -104,7 +104,7 @@ void StubWorkFlow::InvokeReducerProcess() {
 	std::vector<bool> status_list; // hold creation fail
 	// start reducer processes
 	for (int i = 0; 
-		i < (first_reducer_id_in_stub - last_reducer_id_in_stub); i++) {
+		i < (last_reducer_id_in_stub - first_reducer_id_in_stub); i++) {
 		PROCESS_INFORMATION tmp_process_info;
 		LPPROCESS_INFORMATION procee_retrive_infor = &tmp_process_info;
 		LPTSTR  command_line =
