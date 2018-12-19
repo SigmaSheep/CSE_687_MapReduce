@@ -151,3 +151,24 @@ void FileMgt::ClearDirectory(std::string path) {
     fs::remove_all(it->path());
 	}
 }
+
+// arguments are in following order: 1. input_path, 2. media_path, 3. out_path
+// 4.map_dll_path, 5. reduce_dll_path, 6.m_count, 7.r_count, 8.stub_count
+std::string FileMgt::BindArguments(const std::string& input_path, const std::string& media_path,
+	const std::string& out_path, const std::string& map_dll_path,
+	const std::string& reduce_dll_path, const int m_count, const int r_count
+	, const int stub_count) {
+	std::string arguments = input_path + "<>" + media_path + "<>" + out_path
+		+ "<>" + map_dll_path + "<>" + reduce_dll_path
+		+ "<>" + std::to_string(m_count) + "<>" + std::to_string(r_count)
+		+ "<>" + std::to_string(stub_count);
+	return arguments;
+};
+
+std::string FileMgt::ArgumentExtra(const int index, 
+	const std::string& arguments) {
+	std::vector<std::string> arguments_vector;
+	boost::algorithm::split(arguments_vector, arguments,
+		boost::is_any_of("<>"), boost::token_compress_on);
+	return arguments_vector[index];
+};

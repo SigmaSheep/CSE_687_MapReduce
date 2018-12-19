@@ -29,6 +29,12 @@ Maintenance History:
 */
 //
 
+#include "../FileMgt/file_mgt.h"
+#include "../Controller/controller.h"
+#include <boost/asio.hpp> // io_service
+
+
+
 #include "../MapInterface/map_interface.h"
 #include "../Sort/sort.h"
 #include "../ReduceInterface/reduce_interface.h"
@@ -49,6 +55,7 @@ public:
 	WorkFlow(const std::string input_path, const std::string media_path,
 		const std::string out_path, const std::string map_dll_path,
 		const std::string reduce_dll_path, int m_count, int r_count,
-		const int stub_count, const int stub_id);
+		const int stub_count, const std::vector<std::string>& ip_list,
+		const std::vector<std::string> port_list);
 };
 #endif

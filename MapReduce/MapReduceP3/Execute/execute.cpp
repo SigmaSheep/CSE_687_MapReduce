@@ -21,7 +21,6 @@ Maintenance History:
 
 #include <iostream>
 #include <string>
-#include "../Controller/controller.h"
 #include "../WorkFlow/work_flow.h"
 
 int main() {
@@ -75,11 +74,10 @@ int main() {
 	ip_list.push_back("localhost");
 	port_list.push_back("8080");
 	port_list.push_back("6060");
-	Controller controller;
-	controller.BindArguments(input_path, media_path, out_path, map_dll_path,
+
+	WorkFlow work_flow(input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, m_count, r_count,
 		stub_count, ip_list, port_list);
-	controller.Start();
 
 	std::cin.ignore();
 	std::cin.get();

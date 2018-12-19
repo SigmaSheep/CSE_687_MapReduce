@@ -62,8 +62,11 @@ int main() {
 		reduce_dll_path, m_count, r_count, stub_count, stub_id);
 
 	stub_work_flow.InvokeMapperProcess();
-	//std::string map_finshed = std::to_string(stub_id) + " map finished";
-	//boost::asio::write(socket,boost::asio::buffer(map_finshed));
+	boost::asio::write(socket,boost::asio::buffer("F"));
+	//len = socket.read_some(boost::asio::buffer(buf, max_length));
+		
+	//std::string feed_back(buf, len);
+	//std::cout << feed_back << "\n";
 
 	std::cin.get();
 	return 0;
