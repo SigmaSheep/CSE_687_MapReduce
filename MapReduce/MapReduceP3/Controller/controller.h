@@ -14,26 +14,26 @@
 
 //----------------------------------------------------------------------
 
-typedef std::deque<ChatMessage> chat_message_queue;
+typedef std::deque<ChatMessage> ChatMessageQueue;
 
 //----------------------------------------------------------------------
 
-class chat_participant {
+class ChatParticipant {
 public:
-	virtual ~chat_participant() {}
+	virtual ~ChatParticipant() {}
 	virtual void deliver(const ChatMessage& msg) = 0;
 };
 
-typedef std::shared_ptr<chat_participant> chat_participant_ptr;
+typedef std::shared_ptr<ChatParticipant> ChatParticipantPtr;
 //----------------------------------------------------------------------
-class chat_room{
+class ChatRoom{
 public:
-	void join(chat_participant_ptr participant){
+	void join(ChatParticipantPtr participant){
 		participants_.insert(participant);
 		for (auto msg : recent_msgs_)
 			participant->deliver(msg);
 	}
-	void leave(chat_participant_ptr participant){
+	void leave(ChatParticipantPtr participant){
 		participants_.erase(participant);
 	}
 	void deliver(const ChatMessage& msg){
@@ -60,18 +60,18 @@ public:
 		}
 	}
 private:
-	std::set<chat_participant_ptr> participants_;
+	std::set<ChatParticipantPtr> participants_;
 	enum { max_recent_msgs = 100 };
-	chat_message_queue recent_msgs_;
+	ChatMessageQueue recent_msgs_;
 	int number_of_mapper_;
 	int finished_mapper_ = 0;
 };
 //----------------------------------------------------------------------
-class chat_session
-	: public chat_participant,
-	public std::enable_shared_from_this<chat_session>{
+class ChatSession
+	: public ChatParticipant,
+	public std::enable_shared_from_this<ChatSession>{
 public:
-	chat_session(boost::asio::ip::tcp::socket socket, chat_room& room)
+	ChatSession(boost::asio::ip::tcp::socket socket, ChatRoom& room)
 		: socket_(std::move(socket)),
 		room_(room)	{}
 	void start(){
@@ -133,16 +133,16 @@ private:
 		});
 	}
 	boost::asio::ip::tcp::socket socket_;
-	chat_room& room_;
+	ChatRoom& room_;
 	ChatMessage read_msg_;
-	chat_message_queue write_msgs_;
+	ChatMessageQueue write_msgs_;
 };
 
 //----------------------------------------------------------------------
 
-class chat_server{
+class ChatServer{
 public:
-	chat_server(boost::asio::io_context& io_context,
+	ChatServer(boost::asio::io_context& io_context,
 		const boost::asio::ip::tcp::endpoint& endpoint,
 		const int number_of_mapper)
 		: acceptor_(io_context, endpoint){
@@ -154,12 +154,12 @@ private:
 		acceptor_.async_accept(
 			[this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket){
 			if (!ec){
-				std::make_shared<chat_session>(std::move(socket), room_)->start();
+				std::make_shared<ChatSession>(std::move(socket), room_)->start();
 			}
 			do_accept();
 		});
 	}
 	boost::asio::ip::tcp::acceptor acceptor_;
-	chat_room room_;
+	ChatRoom room_;
 };
 #endif

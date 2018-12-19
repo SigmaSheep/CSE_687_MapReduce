@@ -190,7 +190,7 @@ void MapHeartBeatThreadFunc() {
 	boost::asio::ip::tcp::resolver resolver(io_context);
 	boost::asio::ip::tcp::resolver::query query("localhost", "5050");
 	auto endpoints = resolver.resolve(query);
-	chat_client c(io_context, endpoints,false);
+	ChatClient c(io_context, endpoints,false);
 
 	std::thread t([&io_context]() { io_context.run(); });
 	char line1[ChatMessage::max_body_length + 1];

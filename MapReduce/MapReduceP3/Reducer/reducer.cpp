@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 	boost::asio::ip::tcp::resolver::query 
 		query("localhost", "5050");// hard coded 
 	auto endpoints = resolver.resolve(query);
-	chat_client c(io_context, endpoints, true);
+	ChatClient c(io_context, endpoints, true);
 	std::thread t([&io_context]() { io_context.run(); });
 	t.join();
 	BOOST_LOG_TRIVIAL(info) << "Reducer process #"

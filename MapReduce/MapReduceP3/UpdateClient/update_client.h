@@ -7,11 +7,11 @@
 #include <thread>
 #include <boost/asio.hpp>
 #include "../ChatMessage/chat_message.h"
-typedef std::deque<ChatMessage> chat_message_queue;
+typedef std::deque<ChatMessage> ChatMessageQueue;
 
-class chat_client{
+class ChatClient{
 public:
-	chat_client(boost::asio::io_context& io_context,
+	ChatClient(boost::asio::io_context& io_context,
 		const boost::asio::ip::tcp::resolver::results_type& endpoints,
 		const bool reducer_flag)
 		: io_context_(io_context),
@@ -59,12 +59,10 @@ private:
 			boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
 			[this](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
-				std::cout.write(read_msg_.body(), read_msg_.body_length());
 				std::string msg(read_msg_.body(), read_msg_.body_length());
 				if (msg == "AllMappingFinished"&&reducer_flag_) {
 					close();
 				}
-				std::cout << "\n";
 				do_read_header();
 			}else{
 				socket_.close();
@@ -90,7 +88,7 @@ private:
 	boost::asio::io_context& io_context_;
 	boost::asio::ip::tcp::socket socket_;
 	ChatMessage read_msg_;
-	chat_message_queue write_msgs_;
+	ChatMessageQueue write_msgs_;
 	bool reducer_flag_;
 };
 #endif

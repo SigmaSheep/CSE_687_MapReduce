@@ -15,12 +15,12 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	//std::thread t([&io_service]() { io_service.run(); });
 	StubConnection stub_connections(ip_list, port_list, 
 		io_service, strand,arguments);
-	std::cout << "initial broadcast end \n";
+	BOOST_LOG_TRIVIAL(info) << "initial broadcast end \n";
 
 	boost::asio::io_context io_context;
 	boost::asio::ip::tcp::endpoint endpoint(
 		boost::asio::ip::tcp::v4(), 5050); // hard coded listen port
-	chat_server servers(io_context, endpoint, m_count);
-	std::cout << "start server \n";
+	ChatServer servers(io_context, endpoint, m_count);
+	BOOST_LOG_TRIVIAL(info) << "start server \n";
 	io_context.run();
 }
