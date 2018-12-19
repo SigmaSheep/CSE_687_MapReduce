@@ -66,8 +66,10 @@ public:
 			msg.body_length(std::strlen(line));
 			std::memcpy(msg.body(), line, msg.body_length());
 			msg.encode_header();
-			for (auto participant : participants_)
+			for (auto participant : participants_) {
+				std::cout << "im casting\n";
 				participant->deliver(msg);
+			}
 		}
 	}
 
@@ -140,7 +142,7 @@ private:
 				if (s == "map_process_done") {
 					room_.AddOneFinishedMapper();
 				}
-				std::cout.write(read_msg_.body(), read_msg_.body_length());
+				//std::cout.write(read_msg_.body(), read_msg_.body_length());
 				std::cout << s << "\n";
 				room_.deliver(read_msg_);
 				do_read_header();

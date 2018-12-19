@@ -195,28 +195,23 @@ void MapHeartBeatThreadFunc() {
 
 	std::thread t([&io_context]() { io_context.run(); });
 	char line1[chat_message::max_body_length + 1];
-	while (std::cin.getline(line1, 100))
-		while (true){
-
-			std::cout << "in the loop\n";
-			if (finish_flag == true) {
-				break;
-				break;//delete this when fix the getline
-			}
-
-			chat_message msg;
-			char line[25] = "Mapping";
-			msg.body_length(std::strlen(line));
-			std::memcpy(msg.body(), line, msg.body_length());
-			msg.encode_header();
-			c.write(msg);
-			::Sleep(5000);
-		}
+	while (finish_flag == true) {
+		::Sleep(2500);
+		chat_message msg;
+		char line[25] = "Mapping";
+		msg.body_length(std::strlen(line));
+		std::memcpy(msg.body(), line, msg.body_length());
+		msg.encode_header();
+		c.write(msg);
+	}
 	chat_message msg;
 	char line[25] = "map_process_done";
 	msg.body_length(std::strlen(line));
 	std::memcpy(msg.body(), line, msg.body_length());
 	msg.encode_header();
+	::Sleep(2500); // wait some time for connection
+	c.write(msg); // writing routine ignore the last one
+	::Sleep(2500);
 	c.write(msg);
 	c.close();
 	t.join();

@@ -59,13 +59,13 @@ int main() {
 		reduce_dll_path = reduce_dll_path_default;
 	}
 	*/
-	input_path = "C:/Users/Xin-PC/Desktop/test/input";
-	media_path = "C:/Users/Xin-PC/Desktop/test/median";
-	out_path = "C:/Users/Xin-PC/Desktop/test/output";
+	input_path = "C:/Users/Xin/Desktop/test/shaktest";
+	media_path = "C:/Users/Xin/Desktop/test/median";
+	out_path = "C:/Users/Xin/Desktop/test/output";
 	map_dll_path = "../Debug/MapDll.dll";
 	reduce_dll_path = "../Debug/ReduceDll.dll";
-	m_count = 2;
-	r_count = 2;
+	m_count = 4;
+	r_count = 4;
 
 	int stub_count = 2;
 	std::vector<std::string> ip_list;
