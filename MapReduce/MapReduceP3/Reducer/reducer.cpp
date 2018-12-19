@@ -68,8 +68,9 @@ int main(int argc, char* argv[]) {
 	// SECTION 2: wait controller's signal to start
 	
 	boost::asio::io_context io_context;
-	tcp::resolver resolver(io_context);
-	tcp::resolver::query query("localhost", "5050");// hard coded 
+	boost::asio::ip::tcp::resolver resolver(io_context);
+	boost::asio::ip::tcp::resolver::query 
+		query("localhost", "5050");// hard coded 
 	auto endpoints = resolver.resolve(query);
 	chat_client c(io_context, endpoints, true);
 	std::thread t([&io_context]() { io_context.run(); });
