@@ -31,6 +31,7 @@ Maintenance History:
 
 #include "../FileMgt/file_mgt.h"
 #include "../Controller/controller.h"
+#include "../InitialBroadcast/initial_broad_cast.h"
 #include <boost/asio.hpp> // io_service
 
 

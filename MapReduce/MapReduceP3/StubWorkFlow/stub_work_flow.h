@@ -25,6 +25,7 @@ public:
 		r_count_(r_count), stub_count_(stub_count), stub_id_(stub_id) {};
 	~StubWorkFlow() {};
 	void InvokeMapperProcess();
+	void InvokeReducerProcess();
 private:
 	std::string input_path_;
 	std::string media_path_;

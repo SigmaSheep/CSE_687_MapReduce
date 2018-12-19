@@ -15,7 +15,16 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	//std::thread t([&io_service]() { io_service.run(); });
 	StubConnection stub_connections(ip_list, port_list, 
 		io_service, strand,arguments);
-	
+	std::cout << "initial broadcast end \n";
+
+	boost::asio::io_context io_context;
+	boost::asio::ip::tcp::endpoint endpoint(
+		boost::asio::ip::tcp::v4(), 5050); // hard coded listen port
+	chat_server servers(io_context, endpoint, 4);
+	std::cout << "start server \n";
+	io_context.run();
+
+	/*
 	boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), 1234);
 	boost::asio::ip::tcp::acceptor acceptor(io_service, endpoint);
 	boost::asio::ip::tcp::socket socket(io_service);
@@ -24,7 +33,7 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	boost::system::error_code ignored_error;
 	char buf[1024];
 	size_t len = socket.read_some(boost::asio::buffer(buf, 1024));
-
+	*/
 	/*
 	// SECTION 1: invok mapper processes
 	// put input files' paths into vector input_file_list

@@ -29,7 +29,7 @@ int main() {
 	
 	std::vector<std::string> arguments_vector;
 	std::string arguments_string(buf, len);
-	std::cout << arguments_string;
+	//std::cout << arguments_string;
 	boost::algorithm::split(arguments_vector, arguments_string,
 		boost::is_any_of("<>"), boost::token_compress_on);
 	/*
@@ -62,7 +62,9 @@ int main() {
 		reduce_dll_path, m_count, r_count, stub_count, stub_id);
 
 	stub_work_flow.InvokeMapperProcess();
-	boost::asio::write(socket,boost::asio::buffer("F"));
+	//stub_work_flow.InvokeReducerProcess();
+	
+	//boost::asio::write(socket,boost::asio::buffer("F"));
 	//len = socket.read_some(boost::asio::buffer(buf, max_length));
 		
 	//std::string feed_back(buf, len);

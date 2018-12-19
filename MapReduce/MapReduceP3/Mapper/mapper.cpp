@@ -1,13 +1,18 @@
 //Dec 04 2018 first release
+#include "../ChatMessage/chat_message.h"
 #include "../FileMgt/file_mgt.h"
 #include "../MapInterface/map_interface.h"
-
+#include "../UpdateClient/update_client.h"
+#include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
 #include <iostream> // std::cout for debugging 
 #include <mutex>  // std::mutex
 #include <thread> // std::thread
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
+
+// flag for heart beat thread
+bool finish_flag = false;
 
 // as a function pointer passed to map function to exporting data
 void ExportingMedianFile(
@@ -21,7 +26,14 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	std::vector<std::string>::const_iterator start_median_file,
 	std::vector<std::string>::const_iterator end_median_file);
 
+void MapHeartBeatThreadFunc();
+
 int main(int argc, char * argv[]) {
+	// invoke heart beat thread
+	boost::asio::io_context io_context;
+
+	std::thread map_hb_thread(MapHeartBeatThreadFunc);
+
 	// recieve parameters: mapper proc #id, dll_path, number of reducer,
 	//					   median_file_path, input_file_paths(multiple)
 	if (argc < 4) {
@@ -78,6 +90,9 @@ int main(int argc, char * argv[]) {
 	FreeLibrary(h_mod_map);
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id << " ended\n";
+	
+	finish_flag = true;
+	map_hb_thread.join();
 	return 0;
 }
 
@@ -167,4 +182,42 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 		}
 		infile.close();
 	}
+};
+
+void MapHeartBeatThreadFunc() {
+	std::cout << "thread started\n";
+	boost::asio::io_context io_context;
+
+	boost::asio::ip::tcp::resolver resolver(io_context);
+	boost::asio::ip::tcp::resolver::query query("localhost", "5050");
+	auto endpoints = resolver.resolve(query);
+	chat_client c(io_context, endpoints,false);
+
+	std::thread t([&io_context]() { io_context.run(); });
+	char line1[chat_message::max_body_length + 1];
+	while (std::cin.getline(line1, 100))
+		while (true){
+
+			std::cout << "in the loop\n";
+			if (finish_flag == true) {
+				break;
+				break;//delete this when fix the getline
+			}
+
+			chat_message msg;
+			char line[25] = "Mapping";
+			msg.body_length(std::strlen(line));
+			std::memcpy(msg.body(), line, msg.body_length());
+			msg.encode_header();
+			c.write(msg);
+			::Sleep(5000);
+		}
+	chat_message msg;
+	char line[25] = "map_process_done";
+	msg.body_length(std::strlen(line));
+	std::memcpy(msg.body(), line, msg.body_length());
+	msg.encode_header();
+	c.write(msg);
+	c.close();
+	t.join();
 };
