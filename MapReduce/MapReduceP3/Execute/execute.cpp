@@ -24,16 +24,19 @@ Maintenance History:
 #include "../WorkFlow/work_flow.h"
 
 int main() {
-	int r_count, m_count;
+	int r_count, m_count, stub_count;
 
 	std::string input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, map_dll_path_default, reduce_dll_path_default;
-	/*
+	
 	std::cout << "type number of mapper processes\n";
 	std::cin >> m_count;
 
 	std::cout << "type number of reducer processes\n";
 	std::cin >> r_count;
+
+	std::cout << "type number of stubs\n";
+	std::cin >> stub_count;
 
 	std::cout << "type input directory\n";
 	std::cin >> input_path;
@@ -58,8 +61,18 @@ int main() {
 	if (reduce_dll_path == "d") {
 		reduce_dll_path = reduce_dll_path_default;
 	}
-	*/
-	input_path = "C:/Users/Xin/Desktop/test/shaktest";
+	std::vector<std::string> ip_list;
+	std::vector<std::string> port_list;
+	for (int i=0;i<stub_count;i++){
+		std::string tmp;
+		ip_list.push_back("localhost");
+		std::cout<<"type your #"<<i<<" port like 8080\n";
+		std::cin>>tmp;
+		port_list.push_back(tmp);
+	}
+	
+	/*
+	input_path = "C:/Users/Xin/Desktop/test/shakespeare";
 	media_path = "C:/Users/Xin/Desktop/test/median";
 	out_path = "C:/Users/Xin/Desktop/test/output";
 	map_dll_path = "../Debug/MapDll.dll";
@@ -74,7 +87,7 @@ int main() {
 	ip_list.push_back("localhost");
 	port_list.push_back("8080");
 	port_list.push_back("6060");
-
+	*/
 	WorkFlow work_flow(input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, m_count, r_count,
 		stub_count, ip_list, port_list);
