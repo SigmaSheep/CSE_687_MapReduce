@@ -18,46 +18,34 @@ typedef std::deque<ChatMessage> chat_message_queue;
 
 //----------------------------------------------------------------------
 
-class chat_participant
-{
+class chat_participant {
 public:
 	virtual ~chat_participant() {}
 	virtual void deliver(const ChatMessage& msg) = 0;
 };
 
 typedef std::shared_ptr<chat_participant> chat_participant_ptr;
-
 //----------------------------------------------------------------------
-
-class chat_room
-{
+class chat_room{
 public:
-	void join(chat_participant_ptr participant)
-	{
+	void join(chat_participant_ptr participant){
 		participants_.insert(participant);
 		for (auto msg : recent_msgs_)
 			participant->deliver(msg);
 	}
-
-	void leave(chat_participant_ptr participant)
-	{
+	void leave(chat_participant_ptr participant){
 		participants_.erase(participant);
 	}
-
-	void deliver(const ChatMessage& msg)
-	{
+	void deliver(const ChatMessage& msg){
 		recent_msgs_.push_back(msg);
 		while (recent_msgs_.size() > max_recent_msgs)
 			recent_msgs_.pop_front();
-
 		for (auto participant : participants_)
 			participant->deliver(msg);
 	}
-
 	void SetMapperNumber(const int num) {
 		number_of_mapper_ = num;
 	}
-
 	void AddOneFinishedMapper() {
 		finished_mapper_++;
 		if (finished_mapper_ == number_of_mapper_) {
@@ -71,7 +59,6 @@ public:
 				participant->deliver(msg);
 		}
 	}
-
 private:
 	std::set<chat_participant_ptr> participants_;
 	enum { max_recent_msgs = 100 };
@@ -79,105 +66,72 @@ private:
 	int number_of_mapper_;
 	int finished_mapper_ = 0;
 };
-
 //----------------------------------------------------------------------
-
 class chat_session
 	: public chat_participant,
-	public std::enable_shared_from_this<chat_session>
-{
+	public std::enable_shared_from_this<chat_session>{
 public:
 	chat_session(boost::asio::ip::tcp::socket socket, chat_room& room)
 		: socket_(std::move(socket)),
-		room_(room)
-	{
-	}
-
-	void start()
-	{
+		room_(room)	{}
+	void start(){
 		room_.join(shared_from_this());
 		do_read_header();
 	}
-
-	void deliver(const ChatMessage& msg)
-	{
+	void deliver(const ChatMessage& msg){
 		bool write_in_progress = !write_msgs_.empty();
 		write_msgs_.push_back(msg);
-		if (!write_in_progress)
-		{
+		if (!write_in_progress){
 			do_write();
 		}
 	}
-
 private:
-	void do_read_header()
-	{
+	void do_read_header(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
 			boost::asio::buffer(read_msg_.data(), ChatMessage::header_length),
-			[this, self](boost::system::error_code ec, std::size_t /*length*/)
-		{
-			if (!ec && read_msg_.decode_header())
-			{
+			[this, self](boost::system::error_code ec, std::size_t /*length*/){
+			if (!ec && read_msg_.decode_header()){
 				do_read_body();
-			}
-			else
-			{
+			}else{
 				room_.leave(shared_from_this());
 			}
 		});
 	}
-
-	void do_read_body()
-	{
+	void do_read_body(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
 			boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-			[this, self](boost::system::error_code ec, std::size_t /*length*/)
-		{
-			if (!ec)
-			{
-
+			[this, self](boost::system::error_code ec, std::size_t /*length*/){
+			if (!ec){
 				std::string s(read_msg_.body(), read_msg_.body_length());
-				//std::cout.write(read_msg_.body(), read_msg_.body_length());
-				//std::cout << s << "\n";
 				room_.deliver(read_msg_);
-
 				if (s == "map_process_done") {
 					room_.AddOneFinishedMapper();
 				}
 				do_read_header();
-			}
-			else
-			{
+			}else{
 				room_.leave(shared_from_this());
 			}
 		});
 	}
 
-	void do_write()
-	{
+	void do_write(){
 		auto self(shared_from_this());
 		boost::asio::async_write(socket_,
 			boost::asio::buffer(write_msgs_.front().data(),
 				write_msgs_.front().length()),
-			[this, self](boost::system::error_code ec, std::size_t /*length*/)
-		{
-			if (!ec)
-			{
+			[this, self](boost::system::error_code ec, std::size_t /*length*/){
+			if (!ec){
 				write_msgs_.pop_front();
-				if (!write_msgs_.empty())
-				{
+				if (!write_msgs_.empty()){
 					do_write();
 				}
-			}
-			else
-			{
+			}else{
 				room_.leave(shared_from_this());
 			}
 		});
 	}
-
 	boost::asio::ip::tcp::socket socket_;
 	chat_room& room_;
 	ChatMessage read_msg_;
@@ -186,36 +140,26 @@ private:
 
 //----------------------------------------------------------------------
 
-class chat_server
-{
+class chat_server{
 public:
 	chat_server(boost::asio::io_context& io_context,
 		const boost::asio::ip::tcp::endpoint& endpoint,
 		const int number_of_mapper)
-		: acceptor_(io_context, endpoint)
-	{
+		: acceptor_(io_context, endpoint){
 		room_.SetMapperNumber(number_of_mapper);
 		do_accept();
 	}
-
 private:
-	void do_accept()
-	{
+	void do_accept(){
 		acceptor_.async_accept(
-			[this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket)
-		{
-			if (!ec)
-			{
+			[this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket){
+			if (!ec){
 				std::make_shared<chat_session>(std::move(socket), room_)->start();
 			}
-
 			do_accept();
 		});
 	}
-
 	boost::asio::ip::tcp::acceptor acceptor_;
 	chat_room room_;
 };
-
-
 #endif
