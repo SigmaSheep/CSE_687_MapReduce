@@ -194,7 +194,7 @@ void MapHeartBeatThreadFunc() {
 
 	std::thread t([&io_context]() { io_context.run(); });
 	char line1[ChatMessage::max_body_length + 1];
-	while (finish_flag == true) {
+	while (finish_flag == false) {
 		::Sleep(2500);
 		ChatMessage msg;
 		char line[25] = "Mapping";
