@@ -1,17 +1,22 @@
-
+#include <boost/algorithm/string.hpp> //split
+#include <boost/array.hpp>
+#include <boost/asio.hpp>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <memory>
 #include <utility>
-#include <boost/asio.hpp>
-#include <boost/array.hpp>
-#include <boost/algorithm/string.hpp>
 #include <vector>
-#include <string>
 #include "../StubWorkFlow/stub_work_flow.h"
-
+/*
+Stub is the first one to run. Type the port number 
+and the stub would wait for controller's connection. Stub only recieves one 
+message. Stub then invokes mappers and reducers according to controller's
+allocation.
+*/
 int main() {
-	std::cout << "type the port for this stub like 8080\n";
+	std::cout << "type the port for this stub like 8080\n"
+		<< "port 5050 is reserved for controller\n";
 	int port;
 	std::cin >> port;
 	enum { max_length = 1024 };
@@ -20,25 +25,17 @@ int main() {
 	boost::asio::ip::tcp::acceptor acceptor(io_context, endpoint);
 	boost::asio::ip::tcp::socket socket(io_context);
 	acceptor.accept(socket);
-
+	// ready for initial connection from controller
 	std::string message;
-
 	boost::system::error_code ignored_error;
 	char buf[max_length];
+	// read arguments as a long string
 	size_t len = socket.read_some(boost::asio::buffer(buf,max_length));
-	//std::cout.write(buf, len);
-	
+	// split the long string into individual arguments
 	std::vector<std::string> arguments_vector;
 	std::string arguments_string(buf, len);
-	//std::cout << arguments_string;
 	boost::algorithm::split(arguments_vector, arguments_string,
 		boost::is_any_of("<>"), boost::token_compress_on);
-	/*
-	for (auto it = arguments_vector.begin(); 
-		it != arguments_vector.end(); ++it) {
-		std::cout << *it << "\n";
-	}
-	*/
 
 	auto it = arguments_vector.begin();
 	std::string input_path = *it;
@@ -59,9 +56,9 @@ int main() {
 	++it;
 	int stub_id = std::stoi(*it);
 
+	// initial StubWorkFlow and ready for invoking mappers and reducers
 	StubWorkFlow stub_work_flow(input_path, media_path, out_path, map_dll_path,
 		reduce_dll_path, m_count, r_count, stub_count, stub_id);
-
 	stub_work_flow.InvokeMapperProcess();
 	stub_work_flow.InvokeReducerProcess();
 

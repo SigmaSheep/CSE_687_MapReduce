@@ -1,6 +1,6 @@
 #include "work_flow.h"
 
-// WorkFlow handles all working logics
+// WorkFlow handles initial stub connection and invoke controller
 WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	const std::string out_path, const std::string map_dll_path,
 	const std::string reduce_dll_path, int m_count, int r_count,
@@ -12,7 +12,6 @@ WorkFlow::WorkFlow(const std::string input_path, const std::string media_path,
 	
 	boost::asio::io_service io_service;
 	boost::asio::io_service::strand strand(io_service);
-	//std::thread t([&io_service]() { io_service.run(); });
 	StubConnection stub_connections(ip_list, port_list, 
 		io_service, strand,arguments);
 	BOOST_LOG_TRIVIAL(info) << "initial broadcast end \n";

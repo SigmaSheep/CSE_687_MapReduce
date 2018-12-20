@@ -21,9 +21,7 @@
 #include <string>  // std::string
 #include <vector>  // std::vector
 
-#define Reduce_Dll __declspec(dllexport)
-
-class Reduce_Dll ReduceClass : public ReduceInterface {
+class __declspec(dllexport) ReduceClass : public ReduceInterface {
 public:
 	virtual std::vector<std::vector<std::string>> ReduceFunction(
 		const std::vector<std::string>& key_vector,
@@ -33,7 +31,7 @@ public:
 		const std::vector<std::vector<std::string>>& input_vector);
 };
 
-extern "C" Reduce_Dll ReduceInterface* CreateReduceIns()
+extern "C" __declspec(dllexport) ReduceInterface* CreateReduceIns()
 {
 	return new ReduceClass();
 }

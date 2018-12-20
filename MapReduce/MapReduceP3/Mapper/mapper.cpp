@@ -29,8 +29,6 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 void MapHeartBeatThreadFunc(const int id);
 
 int main(int argc, char * argv[]) {
-	
-
 	// recieve parameters: mapper proc #id, dll_path, number of reducer,
 	//					   median_file_path, input_file_paths(multiple)
 	if (argc < 4) {
@@ -182,12 +180,15 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 		infile.close();
 	}
 };
-
+//////////////////////////////////////////////////////////////////////////////////
+//void MapHeartBeatThreadFunc(int id)
+// send updates to controller the states of mapper
+/////////////////////////////////////////////////////////////////////////////////
 void MapHeartBeatThreadFunc(int id) {
 	boost::asio::io_context io_context;
 
 	boost::asio::ip::tcp::resolver resolver(io_context);
-	boost::asio::ip::tcp::resolver::query query("localhost", "5050");
+	boost::asio::ip::tcp::resolver::query query("localhost", "5050"); // hard coded
 	auto endpoints = resolver.resolve(query);
 	ChatClient c(io_context, endpoints,false);
 
@@ -220,3 +221,4 @@ void MapHeartBeatThreadFunc(int id) {
 	c.Close();
 	t.join();
 };
+

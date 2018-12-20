@@ -165,4 +165,3 @@ private:
 	ChatRoom room_;
 };
 #endif
-

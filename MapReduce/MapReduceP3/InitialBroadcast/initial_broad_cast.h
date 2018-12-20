@@ -13,9 +13,10 @@
 #include <condition_variable>
 #include <vector>
 #include "../FileMgt/file_mgt.h"
-
-static int finished_count_ = 0;
-
+/*
+The InitalBroadCast only operates once when at beginning. It pass a single message to every
+stubs. Stubs invok mappers and reducers according this message.
+*/
 class InitalBroadCast
 	:public std::enable_shared_from_this<InitalBroadCast> {
 public:
@@ -32,7 +33,6 @@ public:
 		boost::asio::write(socket_,
 			boost::asio::buffer(arguments_, request_length));
 	};
-
 private:
 	int stub_index_;
 	int stub_count_;
@@ -43,7 +43,6 @@ private:
 	boost::asio::ip::tcp::socket socket_;
 	enum { max_length = 1024 };
 };
-
 class StubConnection {
 public:
 	// constructor
@@ -84,5 +83,4 @@ private:
 	boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp>
 		endpoint_iterator_;
 };
-
 #endif

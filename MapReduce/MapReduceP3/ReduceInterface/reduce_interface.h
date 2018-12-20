@@ -34,7 +34,6 @@ Maintenance History:
 //
 #include <string>
 #include <vector>
-#define Reduce_Dll __declspec(dllexport)
 class ReduceInterface {
 public:
 	ReduceInterface() {};

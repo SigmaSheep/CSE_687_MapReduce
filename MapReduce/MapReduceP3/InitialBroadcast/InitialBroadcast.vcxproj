@@ -120,9 +120,6 @@
   <ItemGroup>
     <ClInclude Include="initial_broad_cast.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="initial_broad_cast.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
