@@ -201,7 +201,7 @@ void MapHeartBeatThreadFunc(int id) {
 		msg.SetBodyLength(std::strlen(str_message.c_str()));
 		std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
 		msg.EncodeHeader();
-		c.write(msg);
+		c.Write(msg);
 	}
 	ChatMessage msg;
 	char line[25] = "map_process_done";
@@ -209,14 +209,14 @@ void MapHeartBeatThreadFunc(int id) {
 	std::memcpy(msg.GetMyBody(), line, msg.GetBodyLength());
 	msg.EncodeHeader();
 	::Sleep(2500); // wait some time for connection
-	c.write(msg); // writing routine ignore the last one
+	c.Write(msg); // writing routine ignore the last one
 	::Sleep(2500);
 	std::string str_message(("mapper#" +
 		std::to_string(id) + " finished"));
 	msg.SetBodyLength(std::strlen(str_message.c_str()));
 	std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
 	msg.EncodeHeader();
-	c.write(msg);
-	c.close();
+	c.Write(msg);
+	c.Close();
 	t.join();
 };

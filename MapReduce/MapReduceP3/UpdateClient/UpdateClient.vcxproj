@@ -121,9 +121,6 @@
   <ItemGroup>
     <ClInclude Include="update_client.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="update_client.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
