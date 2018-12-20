@@ -198,24 +198,24 @@ void MapHeartBeatThreadFunc(int id) {
 		ChatMessage msg;
 		std::string str_message(("mapper#" + 
 			std::to_string(id) + " is runing"));
-		msg.body_length(std::strlen(str_message.c_str()));
-		std::memcpy(msg.body(), str_message.c_str(), msg.body_length());
-		msg.encode_header();
+		msg.SetBodyLength(std::strlen(str_message.c_str()));
+		std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
+		msg.EncodeHeader();
 		c.write(msg);
 	}
 	ChatMessage msg;
 	char line[25] = "map_process_done";
-	msg.body_length(std::strlen(line));
-	std::memcpy(msg.body(), line, msg.body_length());
-	msg.encode_header();
+	msg.SetBodyLength(std::strlen(line));
+	std::memcpy(msg.GetMyBody(), line, msg.GetBodyLength());
+	msg.EncodeHeader();
 	::Sleep(2500); // wait some time for connection
 	c.write(msg); // writing routine ignore the last one
 	::Sleep(2500);
 	std::string str_message(("mapper#" +
 		std::to_string(id) + " finished"));
-	msg.body_length(std::strlen(str_message.c_str()));
-	std::memcpy(msg.body(), str_message.c_str(), msg.body_length());
-	msg.encode_header();
+	msg.SetBodyLength(std::strlen(str_message.c_str()));
+	std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
+	msg.EncodeHeader();
 	c.write(msg);
 	c.close();
 	t.join();

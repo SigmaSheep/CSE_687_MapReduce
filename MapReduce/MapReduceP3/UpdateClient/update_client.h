@@ -44,9 +44,9 @@ private:
 	}
 	void do_read_header(){
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.data(), ChatMessage::header_length),
+			boost::asio::buffer(read_msg_.GetMyData(), ChatMessage::header_length),
 			[this](boost::system::error_code ec, std::size_t /*length*/){
-			if (!ec && read_msg_.decode_header()){
+			if (!ec && read_msg_.DecodeHeader()){
 				do_read_body();
 			}else{
 				socket_.close();
@@ -56,10 +56,10 @@ private:
 
 	void do_read_body(){
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
+			boost::asio::buffer(read_msg_.GetMyBody(), read_msg_.GetBodyLength()),
 			[this](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
-				std::string msg(read_msg_.body(), read_msg_.body_length());
+				std::string msg(read_msg_.GetMyBody(), read_msg_.GetBodyLength());
 				if (msg == "AllMappingFinished"&&reducer_flag_) {
 					close();
 				}
@@ -71,8 +71,8 @@ private:
 	}
 	void do_write(){
 		boost::asio::async_write(socket_,
-			boost::asio::buffer(write_msgs_.front().data(),
-				write_msgs_.front().length()),
+			boost::asio::buffer(write_msgs_.front().GetMyData(),
+				write_msgs_.front().GetMyLength()),
 			[this](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
 				write_msgs_.pop_front();

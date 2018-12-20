@@ -53,9 +53,9 @@ public:
 			ChatMessage msg;
 			BOOST_LOG_TRIVIAL(info)<< "AllMappingFinished";
 			char line[25] = "AllMappingFinished";
-			msg.body_length(std::strlen(line));
-			std::memcpy(msg.body(), line, msg.body_length());
-			msg.encode_header();
+			msg.SetBodyLength(std::strlen(line));
+			std::memcpy(msg.GetMyBody(), line, msg.GetBodyLength());
+			msg.EncodeHeader();
 			recent_msgs_.push_back(msg);
 			for (auto participant : participants_)
 				participant->deliver(msg);
@@ -91,9 +91,9 @@ private:
 	void do_read_header(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.data(), ChatMessage::header_length),
+			boost::asio::buffer(read_msg_.GetMyData(), ChatMessage::header_length),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/){
-			if (!ec && read_msg_.decode_header()){
+			if (!ec && read_msg_.DecodeHeader()){
 				do_read_body();
 			}else{
 				room_.leave(shared_from_this());
@@ -103,10 +103,10 @@ private:
 	void do_read_body(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
-			boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
+			boost::asio::buffer(read_msg_.GetMyBody(), read_msg_.GetBodyLength()),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
-				std::string s(read_msg_.body(), read_msg_.body_length());
+				std::string s(read_msg_.GetMyBody(), read_msg_.GetBodyLength());
 				room_.deliver(read_msg_);
 				BOOST_LOG_TRIVIAL(info) << s;
 				if (s == "map_process_done") {
@@ -122,8 +122,8 @@ private:
 	void do_write(){
 		auto self(shared_from_this());
 		boost::asio::async_write(socket_,
-			boost::asio::buffer(write_msgs_.front().data(),
-				write_msgs_.front().length()),
+			boost::asio::buffer(write_msgs_.front().GetMyData(),
+				write_msgs_.front().GetMyLength()),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
 				write_msgs_.pop_front();
