@@ -1,5 +1,6 @@
 #ifndef FILEMGT_H
 #define FILEMGT_H
+
 /////////////////////////////////////////////////////////////////////
 //  FileMgt.h -	 file management class						   //
 //  ver 1.0                                                        //
@@ -20,9 +21,9 @@ Maintenance History:
            add clear directory
 */
 //
-
 #include <boost/filesystem.hpp>
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(info/error)
+#include <boost/algorithm/string.hpp> // split
 #include <fstream>// std::ofstream, std::ifstream
 #include <iostream> // std::cout
 #include <string> // std::transform(), std::string
@@ -34,19 +35,26 @@ public:
 	FileMgt() {};
 	~FileMgt() {};
 
-	void ClearDirectory(std::string path);
+	static void ClearDirectory(std::string path);
 	std::vector<std::string> FileIter(const std::string path_p);
-	void PrintVector(const std::vector<std::string>& input_vector);
-	void PrintPairVector(const std::vector<std::pair<std::string,
+	static void PrintVector(const std::vector<std::string>& input_vector);
+	static void PrintPairVector(const std::vector<std::pair<std::string,
 		std::string>>& input_vector);
-	void PrintVectorVector(
+	static void PrintVectorVector(
 		const std::vector<std::vector<std::string>>& input_vector);
-    std::vector<std::string> CreateMedianFiles(
+    static std::vector<std::string> CreateMedianFiles(
         int proc_id, int r_count, const std::string media_path);
-	std::string CreateOutputFile(int reducer_id, const std::string out_path);
-	std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
+	static std::string CreateOutputFile(int reducer_id, const std::string out_path);
+	static std::vector<std::pair<std::string, std::string>> ReadMediateFiles(
 		int reducer_id, int r_count, const std::string media_path);
-	std::vector<std::string> AllocateInputFiles(
+	static std::vector<std::string> AllocateInputFiles(
 		int count, const std::vector<std::string>& input_file_list);
+	// arguments are in following order: 1. input_path, 2. media_path, 3. out_path
+	// 4.map_dll_path, 5. reduce_dll_path, 6.m_count, 7.r_count, 8.stub_count
+	static std::string BindArguments(const std::string& input_path, 
+		const std::string& media_path, const std::string& out_path, 
+		const std::string& map_dll_path, const std::string& reduce_dll_path, 
+		const int m_count, const int r_count, const int stub_count);
+	static std::string ArgumentExtra(const int index, const std::string& arguments);
 };
 #endif

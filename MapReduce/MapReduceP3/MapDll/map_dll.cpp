@@ -28,9 +28,7 @@ Maintenance History:
 #include <utility> // std::pair
 #include <vector>  // std::vector
 
-#define Map_DLL __declspec(dllexport)
-
-class Map_DLL MapClass : public MapInterface {
+class __declspec(dllexport) MapClass : public MapInterface {
 public:
 	virtual std::vector<std::pair<std::string, std::string>> MapFunction(
 		const std::string key, const std::string& value);
@@ -41,7 +39,7 @@ private:
 	bool ValidChar(const char c) { return (c < -1 || c>255) ? false : true; };
 };
 
-extern "C" Map_DLL MapInterface* CreateMapIns() { return new MapClass(); }
+extern "C" __declspec(dllexport) MapInterface* CreateMapIns() { return new MapClass(); }
 
 // tokenize the line of string into words, and call exporting function to export data.
 std::vector<std::pair<std::string, std::string>> MapClass::MapFunction(

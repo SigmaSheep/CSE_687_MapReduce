@@ -1,13 +1,18 @@
 //Dec 04 2018 first release
+#include "../ChatMessage/chat_message.h"
 #include "../FileMgt/file_mgt.h"
 #include "../MapInterface/map_interface.h"
-
+#include "../UpdateClient/update_client.h"
+#include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp> // boost::lexical_cast<int>()
 #include <boost/log/trivial.hpp> // BOOST_LOG_TRIVIAL(log/error)
 #include <iostream> // std::cout for debugging 
 #include <mutex>  // std::mutex
 #include <thread> // std::thread
 #include <windows.h> // HMODULE, GetProcAddress(), FreeLibrary()
+
+// flag for heart beat thread
+bool finish_flag = false;
 
 // as a function pointer passed to map function to exporting data
 void ExportingMedianFile(
@@ -21,6 +26,8 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	std::vector<std::string>::const_iterator start_median_file,
 	std::vector<std::string>::const_iterator end_median_file);
 
+void MapHeartBeatThreadFunc(const int id);
+
 int main(int argc, char * argv[]) {
 	// recieve parameters: mapper proc #id, dll_path, number of reducer,
 	//					   median_file_path, input_file_paths(multiple)
@@ -30,6 +37,9 @@ int main(int argc, char * argv[]) {
 		std::exit(EXIT_FAILURE);
 	}
 	int mapper_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
+	// invoke heart beat thread
+	std::thread map_hb_thread(MapHeartBeatThreadFunc, mapper_process_id);
+
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id<<" is created\n";
 	std::string map_dll_path = argv[1];
@@ -56,11 +66,11 @@ int main(int argc, char * argv[]) {
 
 	// divide median files based on thread number
 	// now 2 threads
-	int median_file_count = input_file_list.size();
+	int input_file_count = input_file_list.size();
 	std::vector<std::string>::const_iterator start_input_file =
 		input_file_list.begin();
 	std::vector<std::string>::const_iterator end_input_file =
-		start_input_file + median_file_count / 2;
+		start_input_file + input_file_count / 2;
 	// start thread #1
 	std::thread t1(MapThreadFunction, 0,mapper_process_id, map_dll_path,
 		r_count, median_path, map_pointer, start_input_file,
@@ -77,6 +87,9 @@ int main(int argc, char * argv[]) {
 	FreeLibrary(h_mod_map);
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id << " ended\n";
+	
+	finish_flag = true;
+	map_hb_thread.join();
 	return 0;
 }
 
@@ -129,7 +142,6 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	int r_count, std::string median_path, MapInterface* map_pointer,
 	std::vector<std::string>::const_iterator start_input_file,
 	std::vector<std::string>::const_iterator end_input_file) {
-
 	static std::mutex mtx; // lock
 	std::vector<std::string> input_file_list(
 		start_input_file, end_input_file);
@@ -168,3 +180,45 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 		infile.close();
 	}
 };
+//////////////////////////////////////////////////////////////////////////////////
+//void MapHeartBeatThreadFunc(int id)
+// send updates to controller the states of mapper
+/////////////////////////////////////////////////////////////////////////////////
+void MapHeartBeatThreadFunc(int id) {
+	boost::asio::io_context io_context;
+
+	boost::asio::ip::tcp::resolver resolver(io_context);
+	boost::asio::ip::tcp::resolver::query query("localhost", "5050"); // hard coded
+	auto endpoints = resolver.resolve(query);
+	ChatClient c(io_context, endpoints,false);
+
+	std::thread t([&io_context]() { io_context.run(); });
+	char line1[ChatMessage::max_body_length + 1];
+	while (finish_flag == false) {
+		::Sleep(5000);
+		ChatMessage msg;
+		std::string str_message(("mapper#" + 
+			std::to_string(id) + " is runing"));
+		msg.SetBodyLength(std::strlen(str_message.c_str()));
+		std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
+		msg.EncodeHeader();
+		c.Write(msg);
+	}
+	ChatMessage msg;
+	char line[25] = "map_process_done";
+	msg.SetBodyLength(std::strlen(line));
+	std::memcpy(msg.GetMyBody(), line, msg.GetBodyLength());
+	msg.EncodeHeader();
+	::Sleep(2500); // wait some time for connection
+	c.Write(msg); // writing routine ignore the last one
+	::Sleep(2500);
+	std::string str_message(("mapper#" +
+		std::to_string(id) + " finished"));
+	msg.SetBodyLength(std::strlen(str_message.c_str()));
+	std::memcpy(msg.GetMyBody(), str_message.c_str(), msg.GetBodyLength());
+	msg.EncodeHeader();
+	c.Write(msg);
+	c.Close();
+	t.join();
+};
+
