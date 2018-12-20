@@ -1,48 +1,50 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <cstdlib>
-#include <deque>
-#include <iostream>
-#include <list>
-#include <memory>
-#include <set>
-#include <utility>
 #include <boost/asio.hpp>
 #include <boost/log/trivial.hpp>
+//#include <cstdlib>
+#include <deque> //std::deque
+#include <iostream>
+#include <list> // std::list
+#include <memory> // shared pointer
+#include <set> // std::set
+#include <utility>
 #include "../ChatMessage/chat_message.h"
+/*
+Controller is implemented by a chat_room format. 
+ChatService only listen to any connection, Session handle all the
+two way comunications. ChatRoom saves all the information related 
+within chat room.
+*/
 
-
-//----------------------------------------------------------------------
-
+//-----------------------------------------------------------------
 typedef std::deque<ChatMessage> ChatMessageQueue;
-
-//----------------------------------------------------------------------
-
+//-----------------------------------------------------------------
 class ChatParticipant {
 public:
 	virtual ~ChatParticipant() {}
-	virtual void deliver(const ChatMessage& msg) = 0;
+	virtual void Deliver(const ChatMessage& msg) = 0;
 };
-
+//-----------------------------------------------------------------
 typedef std::shared_ptr<ChatParticipant> ChatParticipantPtr;
-//----------------------------------------------------------------------
+//-----------------------------------------------------------------
 class ChatRoom{
 public:
-	void join(ChatParticipantPtr participant){
+	void Join(ChatParticipantPtr participant){
 		participants_.insert(participant);
 		for (auto msg : recent_msgs_)
-			participant->deliver(msg);
+			participant->Deliver(msg);
 	}
-	void leave(ChatParticipantPtr participant){
+	void Leave(ChatParticipantPtr participant){
 		participants_.erase(participant);
 	}
-	void deliver(const ChatMessage& msg){
+	void Deliver(const ChatMessage& msg){
 		recent_msgs_.push_back(msg);
 		while (recent_msgs_.size() > max_recent_msgs)
 			recent_msgs_.pop_front();
 		for (auto participant : participants_)
-			participant->deliver(msg);
+			participant->Deliver(msg);
 	}
 	void SetMapperNumber(const int num) {
 		number_of_mapper_ = num;
@@ -58,7 +60,7 @@ public:
 			msg.EncodeHeader();
 			recent_msgs_.push_back(msg);
 			for (auto participant : participants_)
-				participant->deliver(msg);
+				participant->Deliver(msg);
 		}
 	}
 private:
@@ -77,49 +79,48 @@ public:
 		: socket_(std::move(socket)),
 		room_(room)	{}
 	void start(){
-		room_.join(shared_from_this());
-		do_read_header();
+		room_.Join(shared_from_this());
+		DoReadHeader();
 	}
-	void deliver(const ChatMessage& msg){
+	void Deliver(const ChatMessage& msg){
 		bool write_in_progress = !write_msgs_.empty();
 		write_msgs_.push_back(msg);
 		if (!write_in_progress){
-			do_write();
+			DoWrite();
 		}
 	}
 private:
-	void do_read_header(){
+	void DoReadHeader(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
 			boost::asio::buffer(read_msg_.GetMyData(), ChatMessage::header_length),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec && read_msg_.DecodeHeader()){
-				do_read_body();
+				DoReadBody();
 			}else{
-				room_.leave(shared_from_this());
+				room_.Leave(shared_from_this());
 			}
 		});
 	}
-	void do_read_body(){
+	void DoReadBody(){
 		auto self(shared_from_this());
 		boost::asio::async_read(socket_,
 			boost::asio::buffer(read_msg_.GetMyBody(), read_msg_.GetBodyLength()),
 			[this, self](boost::system::error_code ec, std::size_t /*length*/){
 			if (!ec){
 				std::string s(read_msg_.GetMyBody(), read_msg_.GetBodyLength());
-				room_.deliver(read_msg_);
+				room_.Deliver(read_msg_);
 				BOOST_LOG_TRIVIAL(info) << s;
 				if (s == "map_process_done") {
 					room_.AddOneFinishedMapper();
 				}
-				do_read_header();
+				DoReadHeader();
 			}else{
-				room_.leave(shared_from_this());
+				room_.Leave(shared_from_this());
 			}
 		});
 	}
-
-	void do_write(){
+	void DoWrite(){
 		auto self(shared_from_this());
 		boost::asio::async_write(socket_,
 			boost::asio::buffer(write_msgs_.front().GetMyData(),
@@ -128,10 +129,10 @@ private:
 			if (!ec){
 				write_msgs_.pop_front();
 				if (!write_msgs_.empty()){
-					do_write();
+					DoWrite();
 				}
 			}else{
-				room_.leave(shared_from_this());
+				room_.Leave(shared_from_this());
 			}
 		});
 	}
@@ -140,9 +141,7 @@ private:
 	ChatMessage read_msg_;
 	ChatMessageQueue write_msgs_;
 };
-
 //----------------------------------------------------------------------
-
 class ChatServer{
 public:
 	ChatServer(boost::asio::io_context& io_context,
@@ -150,19 +149,20 @@ public:
 		const int number_of_mapper)
 		: acceptor_(io_context, endpoint){
 		room_.SetMapperNumber(number_of_mapper);
-		do_accept();
+		DoAccept();
 	}
 private:
-	void do_accept(){
+	void DoAccept(){
 		acceptor_.async_accept(
 			[this](boost::system::error_code ec, boost::asio::ip::tcp::socket socket){
 			if (!ec){
 				std::make_shared<ChatSession>(std::move(socket), room_)->start();
 			}
-			do_accept();
+			DoAccept();
 		});
 	}
 	boost::asio::ip::tcp::acceptor acceptor_;
 	ChatRoom room_;
 };
 #endif
+
