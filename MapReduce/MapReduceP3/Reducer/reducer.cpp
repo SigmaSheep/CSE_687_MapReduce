@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 	}
 	int reducer_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
 	BOOST_LOG_TRIVIAL(info) << "Reducer process #"
-		<< reducer_process_id << " is created\n";
+		<< reducer_process_id << " is created and waiting\n";
 	std::string reduce_dll_path = argv[1];
 	int r_count = boost::lexical_cast<int>(argv[2]);//cast to int
 	std::string out_path = argv[3];

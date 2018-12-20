@@ -9,6 +9,7 @@
 #include <set>
 #include <utility>
 #include <boost/asio.hpp>
+#include <boost/log/trivial.hpp>
 #include "../ChatMessage/chat_message.h"
 
 
@@ -50,6 +51,7 @@ public:
 		finished_mapper_++;
 		if (finished_mapper_ == number_of_mapper_) {
 			ChatMessage msg;
+			BOOST_LOG_TRIVIAL(info)<< "AllMappingFinished";
 			char line[25] = "AllMappingFinished";
 			msg.body_length(std::strlen(line));
 			std::memcpy(msg.body(), line, msg.body_length());
@@ -106,6 +108,7 @@ private:
 			if (!ec){
 				std::string s(read_msg_.body(), read_msg_.body_length());
 				room_.deliver(read_msg_);
+				BOOST_LOG_TRIVIAL(info) << s;
 				if (s == "map_process_done") {
 					room_.AddOneFinishedMapper();
 				}

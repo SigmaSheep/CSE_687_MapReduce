@@ -26,13 +26,10 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	std::vector<std::string>::const_iterator start_median_file,
 	std::vector<std::string>::const_iterator end_median_file);
 
-void MapHeartBeatThreadFunc();
+void MapHeartBeatThreadFunc(const int id);
 
 int main(int argc, char * argv[]) {
-	// invoke heart beat thread
-	boost::asio::io_context io_context;
-
-	std::thread map_hb_thread(MapHeartBeatThreadFunc);
+	
 
 	// recieve parameters: mapper proc #id, dll_path, number of reducer,
 	//					   median_file_path, input_file_paths(multiple)
@@ -41,8 +38,10 @@ int main(int argc, char * argv[]) {
 			"Less arguments recieved in mapper process\n";
 		std::exit(EXIT_FAILURE);
 	}
-
 	int mapper_process_id = boost::lexical_cast<int>(argv[0]);//cast to int
+	// invoke heart beat thread
+	std::thread map_hb_thread(MapHeartBeatThreadFunc, mapper_process_id);
+
 	BOOST_LOG_TRIVIAL(info) << "Mapper process #"
 		<< mapper_process_id<<" is created\n";
 	std::string map_dll_path = argv[1];
@@ -184,7 +183,7 @@ void MapThreadFunction(int thread_id, int mapper_process_id,
 	}
 };
 
-void MapHeartBeatThreadFunc() {
+void MapHeartBeatThreadFunc(int id) {
 	boost::asio::io_context io_context;
 
 	boost::asio::ip::tcp::resolver resolver(io_context);
@@ -195,11 +194,12 @@ void MapHeartBeatThreadFunc() {
 	std::thread t([&io_context]() { io_context.run(); });
 	char line1[ChatMessage::max_body_length + 1];
 	while (finish_flag == false) {
-		::Sleep(2500);
+		::Sleep(5000);
 		ChatMessage msg;
-		char line[25] = "Mapping";
-		msg.body_length(std::strlen(line));
-		std::memcpy(msg.body(), line, msg.body_length());
+		std::string str_message(("mapper#" + 
+			std::to_string(id) + " is runing"));
+		msg.body_length(std::strlen(str_message.c_str()));
+		std::memcpy(msg.body(), str_message.c_str(), msg.body_length());
 		msg.encode_header();
 		c.write(msg);
 	}
@@ -211,6 +211,11 @@ void MapHeartBeatThreadFunc() {
 	::Sleep(2500); // wait some time for connection
 	c.write(msg); // writing routine ignore the last one
 	::Sleep(2500);
+	std::string str_message(("mapper#" +
+		std::to_string(id) + " finished"));
+	msg.body_length(std::strlen(str_message.c_str()));
+	std::memcpy(msg.body(), str_message.c_str(), msg.body_length());
+	msg.encode_header();
 	c.write(msg);
 	c.close();
 	t.join();

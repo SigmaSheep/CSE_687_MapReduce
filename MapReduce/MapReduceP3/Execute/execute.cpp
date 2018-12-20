@@ -73,7 +73,7 @@ int main() {
 	}
 	*/
 	
-	input_path = "C:/Users/Xin/Desktop/test/shakespeare";
+	input_path = "C:/Users/Xin/Desktop/test/shaktest";
 	media_path = "C:/Users/Xin/Desktop/test/median";
 	out_path = "C:/Users/Xin/Desktop/test/output";
 	map_dll_path = "../Debug/MapDll.dll";
